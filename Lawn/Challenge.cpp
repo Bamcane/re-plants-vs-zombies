@@ -2120,7 +2120,7 @@ void Challenge::BeghouledCheckStuckState()
 	{
 		mChallengeState = STATECHALLENGE_BEGHOULED_NO_MATCHES;
 		mChallengeStateCounter = 500;
-		mBoard->DisplayAdviceAgain("[ADVICE_BEGHOULED_NO_MOVES]", MESSAGE_STYLE_HINT_FAST, ADVICE_BEGHOULED_NO_MOVES);
+		mBoard->DisplayAdviceAgain(__S("[ADVICE_BEGHOULED_NO_MOVES]"), MESSAGE_STYLE_HINT_FAST, ADVICE_BEGHOULED_NO_MOVES);
 	}
 }
 
@@ -3039,7 +3039,7 @@ void Challenge::SpawnZombieWave()
 	}
 	if (mApp->IsBungeeBlitzLevel() && aIsFlagWave)
 	{
-		mBoard->DisplayAdvice("[ADVICE_BUNGEES_INCOMING]", MESSAGE_STYLE_HINT_FAST, ADVICE_NONE);
+		mBoard->DisplayAdvice(__S("[ADVICE_BUNGEES_INCOMING]"), MESSAGE_STYLE_HINT_FAST, ADVICE_NONE);
 	}
 }
 
@@ -3375,7 +3375,7 @@ void Challenge::UpdatePortalCombat()
 		mChallengeStateCounter--;
 		if (mChallengeStateCounter == 500)
 		{
-			mBoard->DisplayAdviceAgain("[ADVICE_PORTAL_RELOCATING]", MESSAGE_STYLE_HINT_FAST, ADVICE_PORTAL_RELOCATING);
+			mBoard->DisplayAdviceAgain(__S("[ADVICE_PORTAL_RELOCATING]"), MESSAGE_STYLE_HINT_FAST, ADVICE_PORTAL_RELOCATING);
 		}
 		else if (mChallengeStateCounter <= 0)
 		{
@@ -3696,7 +3696,7 @@ void Challenge::ZombiquariumUpdate()
 	mBoard->mProgressMeterWidth = TodAnimateCurve(0, ZOMBIQUARIUM_WINNING_SCORE, aScore, 0, PROGRESS_METER_COUNTER, CURVE_LINEAR);
 	if (aScore >= ZOMBIQUARIUM_WINNING_SCORE - 100)
 	{
-		mBoard->DisplayAdvice("[ADVICE_ALMOST_THERE]", MESSAGE_STYLE_HINT_TALL_FAST, ADVICE_ALMOST_THERE);
+		mBoard->DisplayAdvice(__S("[ADVICE_ALMOST_THERE]"), MESSAGE_STYLE_HINT_TALL_FAST, ADVICE_ALMOST_THERE);
 	}
 	if (aScore >= 110 && mBoard->mTutorialState == TUTORIAL_OFF)
 	{
@@ -3704,7 +3704,7 @@ void Challenge::ZombiquariumUpdate()
 		float aPosX = mBoard->mSeedBank->mX + mBoard->mSeedBank->mSeedPackets[0].mX;
 		float aPosY = mBoard->mSeedBank->mY + mBoard->mSeedBank->mSeedPackets[0].mY;
 		mBoard->TutorialArrowShow(aPosX, aPosY);
-		mBoard->DisplayAdvice("[ADVICE_ZOMBIQUARIUM_BUY_SNORKEL]", MESSAGE_STYLE_HINT_TALL_FAST, ADVICE_ZOMBIQUARIUM_BUY_SNORKEL);
+		mBoard->DisplayAdvice(__S("[ADVICE_ZOMBIQUARIUM_BUY_SNORKEL]"), MESSAGE_STYLE_HINT_TALL_FAST, ADVICE_ZOMBIQUARIUM_BUY_SNORKEL);
 	}
 	else if (aScore < 100 && mBoard->mTutorialState == TUTORIAL_ZOMBIQUARIUM_BUY_SNORKEL)
 	{
@@ -3718,7 +3718,7 @@ void Challenge::ZombiquariumUpdate()
 		float aPosX = mBoard->mSeedBank->mX + mBoard->mSeedBank->mSeedPackets[1].mX;
 		float aPosY = mBoard->mSeedBank->mY + mBoard->mSeedBank->mSeedPackets[1].mY;
 		mBoard->TutorialArrowShow(aPosX, aPosY);
-		mBoard->DisplayAdvice("[ADVICE_ZOMBIQUARIUM_CLICK_TROPHY]", MESSAGE_STYLE_HINT_TALL_FAST, ADVICE_ZOMBIQUARIUM_CLICK_TROPHY);
+		mBoard->DisplayAdvice(__S("[ADVICE_ZOMBIQUARIUM_CLICK_TROPHY]"), MESSAGE_STYLE_HINT_TALL_FAST, ADVICE_ZOMBIQUARIUM_CLICK_TROPHY);
 	}
 	else if (aScore <= ZOMBIQUARIUM_WINNING_SCORE && mBoard->mTutorialState == TUTORIAL_ZOMBIQUARIUM_CLICK_TROPHY)
 	{
@@ -4068,7 +4068,7 @@ void Challenge::ScaryPotterStart()
 {
 	if (mApp->IsAdventureMode())
 	{
-		mBoard->DisplayAdvice("[ADVICE_USE_SHOVEL_ON_POTS]", MESSAGE_STYLE_HINT_STAY, ADVICE_USE_SHOVEL_ON_POTS);
+		mBoard->DisplayAdvice(__S("[ADVICE_USE_SHOVEL_ON_POTS]"), MESSAGE_STYLE_HINT_STAY, ADVICE_USE_SHOVEL_ON_POTS);
 	}
 }
 
@@ -4215,7 +4215,7 @@ void Challenge::ScaryPotterOpenPot(GridItem* theScaryPot)
 
 	if (mBoard->mHelpIndex == ADVICE_USE_SHOVEL_ON_POTS)
 	{
-		mBoard->DisplayAdvice("[ADVICE_DESTROY_POTS_TO_FINISH_LEVEL]", MESSAGE_STYLE_HINT_FAST, ADVICE_DESTORY_POTS_TO_FINISIH_LEVEL);
+		mBoard->DisplayAdvice(__S("[ADVICE_DESTROY_POTS_TO_FINISH_LEVEL]"), MESSAGE_STYLE_HINT_FAST, ADVICE_DESTORY_POTS_TO_FINISIH_LEVEL);
 	}
 	if (ScaryPotterIsCompleted())
 	{
@@ -4385,11 +4385,11 @@ void Challenge::IZombieMouseDownWithZombie(int theX, int theY, int theClickCount
 				mBoard->ClearAdvice(ADVICE_NONE);
 				if (aSeedType == SEED_ZOMBIE_BUNGEE)
 				{
-					mBoard->DisplayAdvice("[ADVICE_I_ZOMBIE_LEFT_OF_LINE]", MESSAGE_STYLE_HINT_LONG, ADVICE_I_ZOMBIE_LEFT_OF_LINE);
+					mBoard->DisplayAdvice(__S("[ADVICE_I_ZOMBIE_LEFT_OF_LINE]"), MESSAGE_STYLE_HINT_LONG, ADVICE_I_ZOMBIE_LEFT_OF_LINE);
 				}
 				else
 				{
-					mBoard->DisplayAdvice("[ADVICE_I_ZOMBIE_NOT_PASSED_LINE]", MESSAGE_STYLE_HINT_LONG, ADVICE_I_ZOMBIE_NOT_PASSED_LINE);
+					mBoard->DisplayAdvice(__S("[ADVICE_I_ZOMBIE_NOT_PASSED_LINE]"), MESSAGE_STYLE_HINT_LONG, ADVICE_I_ZOMBIE_NOT_PASSED_LINE);
 				}
 			}
 
@@ -4729,7 +4729,7 @@ void Challenge::IZombieInitLevel()
 //0x42B290
 void Challenge::IZombieStart()
 {
-	mBoard->DisplayAdvice("[ADVICE_I_ZOMBIE_EAT_ALL_BRAINS]", MESSAGE_STYLE_HINT_FAST, ADVICE_I_ZOMBIE_EAT_ALL_BRAINS);
+	mBoard->DisplayAdvice(__S("[ADVICE_I_ZOMBIE_EAT_ALL_BRAINS]"), MESSAGE_STYLE_HINT_FAST, ADVICE_I_ZOMBIE_EAT_ALL_BRAINS);
 }
 
 //0x42B340
@@ -5041,7 +5041,7 @@ void Challenge::SquirrelFound(GridItem* theSquirrel)
 		Zombie* aZombie = mBoard->AddZombieInRow(ZOMBIE_NORMAL, theSquirrel->mGridY, 0);
 		aZombie->mPosX = mBoard->GridToPixelX(theSquirrel->mGridX, theSquirrel->mGridY);
 		theSquirrel->GridItemDie();
-		mBoard->DisplayAdvice("[ADVICE_SQUIRREL_ZOMBIE]", MESSAGE_STYLE_HINT_FAST, ADVICE_NONE);
+		mBoard->DisplayAdvice(__S("[ADVICE_SQUIRREL_ZOMBIE]"), MESSAGE_STYLE_HINT_FAST, ADVICE_NONE);
 	}
 	else
 	{
@@ -5200,12 +5200,12 @@ void Challenge::LastStandUpdate()
 
 		if (mSurvivalStage == 0)
 		{
-			aButton->SetLabel("[START_ONSLAUGHT]");
+			aButton->SetLabel(__S("[START_ONSLAUGHT]"));
 			aButton->Resize(300, 559, 210, 46);
 		}
 		else
 		{
-			aButton->SetLabel("[CONTINUE_ONSLAUGHT]");
+			aButton->SetLabel(__S("[CONTINUE_ONSLAUGHT]"));
 			aButton->Resize(270, 559, 257, 46);
 		}
 	}

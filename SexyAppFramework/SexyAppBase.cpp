@@ -1555,7 +1555,7 @@ bool SexyAppBase::RegistryWrite(const std::string& theValueName, uint32_t theTyp
 
 	//HKEY aGameKey;
 	
-	std::string aKeyName = RemoveTrailingSlash("SOFTWARE\\" + mRegKey);
+	std::string aKeyName = RemoveTrailingSlash("SOFTWARE\\" + SexyStringToString(mRegKey));
 	std::string aValueName;
 
 	int aSlashPos = (int) theValueName.rfind('\\');
@@ -1619,9 +1619,10 @@ bool SexyAppBase::RegistryWrite(const std::string& theValueName, uint32_t theTyp
 	return true;
 }
 
-bool SexyAppBase::RegistryWriteString(const std::string& theValueName, const std::string& theString)
+bool SexyAppBase::RegistryWriteString(const std::string& theValueName, const SexyString& theString)
 {
-	return RegistryWrite(theValueName, regemu::REGEMU_SZ, (uchar*) theString.c_str(), theString.length());
+	std::string String = SexyStringToString(theString);
+	return RegistryWrite(theValueName, regemu::REGEMU_SZ, (uchar*) String.c_str(), String.length());
 }
 
 bool SexyAppBase::RegistryWriteInteger(const std::string& theValueName, int theValue)
@@ -1673,7 +1674,7 @@ bool SexyAppBase::RegistryEraseKey(const SexyString& _theKeyName)
 		return mDemoBuffer.ReadNumBits(1, false) != 0;		
 	}	
 	
-	std::string aKeyName = RemoveTrailingSlash("SOFTWARE\\" + mRegKey) + "\\" + theKeyName;
+	std::string aKeyName = RemoveTrailingSlash("SOFTWARE\\" + SexyStringToString(mRegKey)) + "\\" + theKeyName;
 
 	/*
 	int aResult = RegDeleteKeyA(HKEY_CURRENT_USER, aKeyName.c_str());
@@ -1710,7 +1711,7 @@ void SexyAppBase::RegistryEraseValue(const SexyString& _theValueName)
 		return;
 
 	//HKEY aGameKey;
-	std::string aKeyName = RemoveTrailingSlash("SOFTWARE\\" + mRegKey);
+	std::string aKeyName = RemoveTrailingSlash("SOFTWARE\\" + SexyStringToString(mRegKey));
 	std::string aValueName;
 
 	int aSlashPos = (int) theValueName.rfind('\\');
@@ -1864,7 +1865,7 @@ bool SexyAppBase::RegistryReadKey(const std::string& theValueName, uint32_t* the
 	{		
 		//HKEY aGameKey;
 
-		std::string aKeyName = RemoveTrailingSlash("SOFTWARE\\" + mRegKey);
+		std::string aKeyName = RemoveTrailingSlash("SOFTWARE\\" + SexyStringToString(mRegKey));
 		std::string aValueName;
 
 		int aSlashPos = (int) theValueName.rfind('\\');
@@ -1931,7 +1932,7 @@ bool SexyAppBase::RegistryReadKey(const std::string& theValueName, uint32_t* the
 }
 
 // aStr isn't initialised lmao
-bool SexyAppBase::RegistryReadString(const std::string& theKey, std::string* theString)
+bool SexyAppBase::RegistryReadString(const std::string& theKey, SexyString* theString)
 {
 	char aStr[1024];
 	
@@ -1943,9 +1944,9 @@ bool SexyAppBase::RegistryReadString(const std::string& theKey, std::string* the
 	if (aType != regemu::REGEMU_SZ)
 		return false;
 
-	aStr[aLen] = 0;
+	aStr[aLen] = __S('\0');
 
-	*theString = aStr;
+	*theString = StringToSexyStringFast(aStr);
 	return true;
 }
 
@@ -1989,7 +1990,7 @@ bool SexyAppBase::RegistryReadData(const std::string& theKey, uchar* theValue, u
 void SexyAppBase::ReadFromRegistry()
 {
 	mReadFromRegistry = true;
-	mRegKey = SexyStringToString(GetString("RegistryKey", StringToSexyString(mRegKey)));
+	mRegKey = GetString("RegistryKey", mRegKey);
 
 	if (mRegKey.length() == 0)
 		return;
@@ -4745,7 +4746,7 @@ double SexyAppBase::GetDouble(const std::string& theId, double theDefault)
 
 SexyString SexyAppBase::GetString(const std::string& theId)
 {
-	StringWStringMap::iterator anItr = mStringProperties.find(theId);
+	SexyStringWStringMap::iterator anItr = mStringProperties.find(StringToSexyStringFast(theId));
 	DBG_ASSERTE(anItr != mStringProperties.end());
 	
 	if (anItr != mStringProperties.end())	
@@ -4756,7 +4757,7 @@ SexyString SexyAppBase::GetString(const std::string& theId)
 
 SexyString SexyAppBase::GetString(const std::string& theId, const SexyString& theDefault)
 {
-	StringWStringMap::iterator anItr = mStringProperties.find(theId);	
+	SexyStringWStringMap::iterator anItr = mStringProperties.find(StringToSexyStringFast(theId));	
 	
 	if (anItr != mStringProperties.end())	
 		return WStringToSexyString(anItr->second);
@@ -4777,7 +4778,7 @@ StringVector SexyAppBase::GetStringVector(const std::string& theId)
 
 void SexyAppBase::SetString(const std::string& theId, const std::wstring& theValue)
 {
-	std::pair<StringWStringMap::iterator, bool> aPair = mStringProperties.insert(StringWStringMap::value_type(theId, theValue));
+	std::pair<SexyStringWStringMap::iterator, bool> aPair = mStringProperties.insert(SexyStringWStringMap::value_type(StringToSexyStringFast(theId), theValue));
 	if (!aPair.second) // Found it, change value
 		aPair.first->second = theValue;
 }

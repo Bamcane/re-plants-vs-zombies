@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+.vscode
+.ninja_deps
+.ninja_log
+build.ninja
+/re-plants-vs-zombies
+/re-plants-vs-zombies.exe
+/SexyAppFramework/sound/SDL-Mixer-X
 # User-specific files
 *.rsuser
 *.suo

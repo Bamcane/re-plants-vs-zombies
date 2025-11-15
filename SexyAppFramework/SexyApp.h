@@ -17,8 +17,8 @@ public:
 
 	std::string				mBetaSupportSiteOverride;
 	std::string				mBetaSupportProdNameOverride;
-	std::string				mReferId;
-	std::string				mVariation;
+	SexyString				mReferId;
+	SexyString				mVariation;
 	ulong					mDownloadId;
 	std::string				mRegSource;
 	ulong					mLastVerCheckQueryTime;
@@ -28,9 +28,9 @@ public:
 	int						mBuildNum;
 	std::string				mBuildDate;
 
-	std::string				mUserName;	
-	std::string				mRegUserName;
-	std::string				mRegCode;
+	SexyString				mUserName;	
+	SexyString				mRegUserName;
+	SexyString				mRegCode;
 	bool					mIsRegistered;	
 	bool					mBuildUnlocked;
 

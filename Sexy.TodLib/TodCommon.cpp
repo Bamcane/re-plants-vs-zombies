@@ -1283,7 +1283,7 @@ SexyString TodReplaceString(const SexyString& theText, const SexyChar* theString
 	if (aPos != SexyString::npos)
 	{
 		SexyString aFinalStringToSubstitute = TodStringTranslate(theStringToSubstitute);
-		aFinalString.replace(aPos, strlen(theStringToFind), aFinalStringToSubstitute);
+		aFinalString.replace(aPos, sexystrlen(theStringToFind), aFinalStringToSubstitute);
 	}
 
 	return aFinalString;
@@ -1297,7 +1297,7 @@ SexyString TodReplaceNumberString(const SexyString& theText, const SexyChar* the
 	if (aPos != SexyString::npos)
 	{
 		SexyString aNumberString = StrFormat(__S("%d"), theNumber);
-		aFinalString.replace(aPos, strlen(theStringToFind), aNumberString);
+		aFinalString.replace(aPos, sexystrlen(theStringToFind), aNumberString);
 	}
 
 	return aFinalString;

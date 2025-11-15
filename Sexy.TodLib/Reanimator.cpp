@@ -699,7 +699,7 @@ bool Reanimation::DrawTrack(Graphics* g, int theTrackIndex, int theRenderGroup, 
 	else if (aTransform.mFont != nullptr && *aTransform.mText != '\0')  // 如果存在字体且文本不为空
 	{
 		aMatrix.LoadIdentity();
-		int aWidth = aTransform.mFont->StringWidth(aTransform.mText);
+		int aWidth = aTransform.mFont->StringWidth(StringToSexyStringFast(aTransform.mText));
 		SexyMatrix3Translation(aMatrix, -aWidth * 0.5f, aTransform.mFont->mAscent);
 	}
 	else
@@ -767,12 +767,12 @@ bool Reanimation::DrawTrack(Graphics* g, int theTrackIndex, int theRenderGroup, 
 	}
 	else if (aTransform.mFont != nullptr && *aTransform.mText != '\0')  // 如果不存在图像但存在文本
 	{
-		TodDrawStringMatrix(g, aTransform.mFont, aMatrix, aTransform.mText, aColor);
+		TodDrawStringMatrix(g, aTransform.mFont, aMatrix, StringToSexyStringFast(aTransform.mText), aColor);
 		if (mEnableExtraAdditiveDraw)
 		{
 			int aOldMode = g->GetDrawMode();  // 备份绘制模式
 			g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
-			TodDrawStringMatrix(g, aTransform.mFont, aMatrix, aTransform.mText, aExtraAdditiveColor);
+			TodDrawStringMatrix(g, aTransform.mFont, aMatrix, StringToSexyStringFast(aTransform.mText), aExtraAdditiveColor);
 			g->SetDrawMode(aOldMode);  // 还原绘制模式
 		}
 	}
@@ -1141,7 +1141,7 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 	PerfTimer aTimer;
 	aTimer.Start();
 	TodHesitationBracket aHesitation("Load Reanim '%s'", aReanimParams->mReanimFileName);
-	if (!ReanimationLoadDefinition(aReanimParams->mReanimFileName, aReanimDef))
+	if (!ReanimationLoadDefinition(StringToSexyStringFast(aReanimParams->mReanimFileName), aReanimDef))
 	{
 		char aBuf[1024];
 		sprintf(aBuf, "Failed to load reanim '%s'", aReanimParams->mReanimFileName);
@@ -1155,7 +1155,7 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 //0x473750
 void ReanimatorLoadDefinitions(ReanimationParams* theReanimationParamArray, int theReanimationParamArraySize)
 {
-	TodHesitationBracket aHesitation(__S("ReanimatorLoadDefinitions"));
+	TodHesitationBracket aHesitation("ReanimatorLoadDefinitions");
 	TOD_ASSERT(!gReanimationParamArray && !gReanimatorDefArray);
 	gReanimationParamArraySize = theReanimationParamArraySize;
 	gReanimationParamArray = theReanimationParamArray;

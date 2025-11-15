@@ -130,21 +130,21 @@ bool ProfileMgr::RenameProfile(const SexyString& theOldName, const SexyString& t
         return false;
     else
     {
-        // ÅĞ¶ÏĞŞ¸ÄÇ°ºóµÄÓÃ»§ÃûÊÇ·ñÒ»ÖÂ£¬Ò»ÖÂÔòÖ±½ÓÔÚÔ­´æµµÖĞ½øĞĞĞŞ¸Ä£¬·ñÔòĞèÒª¶îÍâ²Ù×÷
-        if (_stricmp(theOldName.c_str(), theNewName.c_str()) == 0)
+        // åˆ¤æ–­ä¿®æ”¹å‰åçš„ç”¨æˆ·åæ˜¯å¦ä¸€è‡´ï¼Œä¸€è‡´åˆ™ç›´æ¥åœ¨åŸå­˜æ¡£ä¸­è¿›è¡Œä¿®æ”¹ï¼Œå¦åˆ™éœ€è¦é¢å¤–æ“ä½œ
+        if (theOldName == theNewName)
             anOldItr->second.mName = theNewName;
         else
         {
-            // Ïò mProfileMap ÖĞ²åÈëÒ»¸öÓÉĞÂÓÃ»§Ãû¼°¾É´æµµ×é³ÉµÄ¶Ô×é
+            // å‘ mProfileMap ä¸­æ’å…¥ä¸€ä¸ªç”±æ–°ç”¨æˆ·ååŠæ—§å­˜æ¡£ç»„æˆçš„å¯¹ç»„
             auto aRet = mProfileMap.emplace(theNewName, anOldItr->second);  // auto aRet = mProfileMap.insert({theNewName, anOldItr->second});
-            // Í¨¹ı·µ»ØÖµ¼ì²âĞÂÓÃ»§ÃûÊÇ·ñÓëÔ­ÓĞ´æµµÖØ¸´£¬ÖØ¸´Ôò·µ»Ø false£¬²åÈë³É¹¦Ôò¼ÌĞø²Ù×÷
+            // é€šè¿‡è¿”å›å€¼æ£€æµ‹æ–°ç”¨æˆ·åæ˜¯å¦ä¸åŸæœ‰å­˜æ¡£é‡å¤ï¼Œé‡å¤åˆ™è¿”å› falseï¼Œæ’å…¥æˆåŠŸåˆ™ç»§ç»­æ“ä½œ
             if (!aRet.second)
                 return false;
             else
             {
-                // É¾³ı mProfileMap ÖĞÔ­ÓÃ»§Ãû¼°¾É´æµµµÄ¼üÖµ¶Ô
+                // åˆ é™¤ mProfileMap ä¸­åŸç”¨æˆ·ååŠæ—§å­˜æ¡£çš„é”®å€¼å¯¹
                 mProfileMap.erase(anOldItr);
-                // ĞŞ¸ÄĞÂ²åÈëµÄ¼üÖµ¶ÔÖĞ´æµµµÄÓÃ»§Ãû
+                // ä¿®æ”¹æ–°æ’å…¥çš„é”®å€¼å¯¹ä¸­å­˜æ¡£çš„ç”¨æˆ·å
                 aRet.first->second.mName = theNewName;
             }
         }
@@ -158,12 +158,12 @@ void ProfileMgr::DeleteOldestProfile()
     if (mProfileMap.size() == 0)
         return;
 
-    //½« mUseSeq ×îĞ¡µÄ´æµµµÄËùÔÚÎ»ÖÃ¼ÇÂ¼ÔÚ anOldest µü´úÆ÷ÖĞ
+    //å°† mUseSeq æœ€å°çš„å­˜æ¡£çš„æ‰€åœ¨ä½ç½®è®°å½•åœ¨ anOldest è¿­ä»£å™¨ä¸­
     auto anOldest = mProfileMap.begin();
     for (auto anItr = anOldest; anItr != mProfileMap.end(); anItr++)
         if (anItr->second.mUseSeq < anOldest->second.mUseSeq)
             anOldest = anItr;
-    //É¾³ı¼ÇÂ¼µÄ mUseSeq ×îĞ¡µÄ´æµµ
+    //åˆ é™¤è®°å½•çš„ mUseSeq æœ€å°çš„å­˜æ¡£
     DeleteProfile(anOldest);
 }
 

@@ -57,13 +57,13 @@ void MessageWidget::SetLabel(const SexyString& theNewLabel, MessageStyle theMess
 	if (mReanimType != ReanimationType::REANIM_NONE && mDuration > 0)
 	{
 		mMessageStyleNext = theMessageStyle;
-		strcpy(mLabelNext, aLabel.c_str());
+		sexystrcpy(mLabelNext, aLabel.c_str());
 		ClearLabel();
 	}
 	else
 	{
 		ClearReanim();
-		strcpy(mLabel, aLabel.c_str());
+		sexystrcpy(mLabel, aLabel.c_str());
 		mMessageStyle = theMessageStyle;
 		mReanimType = ReanimationType::REANIM_NONE;
 

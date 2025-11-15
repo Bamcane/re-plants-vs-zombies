@@ -327,7 +327,7 @@ bool DefinitionLoadImage(Image** theImage, const SexyString& theName)
     }
 
     // 尝试借助资源管理器，从 XML 中加载贴图
-    Image* anImage = (Image*)gSexyAppBase->mResourceManager->LoadImage(theName);
+    Image* anImage = (Image*)gSexyAppBase->mResourceManager->LoadImage(SexyStringToStringFast(theName));
     if (anImage)
     {
         *theImage = anImage;
@@ -342,12 +342,12 @@ bool DefinitionLoadImage(Image** theImage, const SexyString& theName)
         int aPrefixLen = strlen(aLoadResPath.mPrefix);
         if (aPrefixLen < aNameLen)
         {
-            SexyString aPathToTry = aLoadResPath.mDirectory + theName.substr(aPrefixLen, aNameLen);
-            SharedImageRef aImageRef = gSexyAppBase->GetSharedImage(aPathToTry);
+            SexyString aPathToTry = StringToSexyStringFast(aLoadResPath.mDirectory) + theName.substr(aPrefixLen, aNameLen);
+            SharedImageRef aImageRef = gSexyAppBase->GetSharedImage(SexyStringToStringFast(aPathToTry));
             if ((Image*)aImageRef != nullptr)
             {
-                TodHesitationTrace("Load Image '%s'", theName.c_str());
-                TodAddImageToMap(&aImageRef, theName);
+                TodHesitationTrace("Load Image '%s'", SexyStringToStringFast(theName).c_str());
+                TodAddImageToMap(&aImageRef, SexyStringToStringFast(theName));
                 TodMarkImageForSanding((Image*)aImageRef);
                 *theImage = (Image*)aImageRef;
                 return true;
@@ -435,7 +435,7 @@ inline bool DefReadFromCacheImage(void*& theReadPtr, Image** theImage)
     aImageName[aLen] = '\0';
 
     *theImage = nullptr;
-    return aImageName[0] == '\0' || DefinitionLoadImage(theImage, aImageName);
+    return aImageName[0] == '\0' || DefinitionLoadImage(theImage, StringToSexyString(aImageName));
 }
 
 //0x444220
@@ -448,7 +448,7 @@ inline bool DefReadFromCacheFont(void*& theReadPtr, _Font** theFont)
     aFontName[aLen] = '\0';
     
     *theFont = nullptr;
-    return aFontName[0] == '\0' || DefinitionLoadFont(theFont, aFontName);
+    return aFontName[0] == '\0' || DefinitionLoadFont(theFont, StringToSexyString(aFontName));
 }
 
 //0x4442C0
@@ -572,7 +572,7 @@ bool DefinitionReadCompiledFile(const SexyString& theCompiledFilePath, DefMap* t
 {
     PerfTimer aTimer;
     aTimer.Start();
-    FILE* pFile = fopen(theCompiledFilePath.c_str(), "rb");
+    FILE* pFile = fopen(SexyStringToStringFast(theCompiledFilePath).c_str(), "rb");
     if (!pFile) return false;
 
     fseek(pFile, 0, 2);  // 将读取位置的指针移动至文件末尾
@@ -583,7 +583,7 @@ bool DefinitionReadCompiledFile(const SexyString& theCompiledFilePath, DefMap* t
     bool aReadCompressedFailed = fread(aCompressedBuffer, sizeof(char), aCompressedSize, pFile) != aCompressedSize;
     fclose(pFile);  // 关闭资源文件流并释放 pFile 占用的内存
     if (aReadCompressedFailed) { // 判断是否读取成功
-        TodTrace(__S("Failed to read compiled file: %s\n"), theCompiledFilePath.c_str());
+        TodTrace("Failed to read compiled file: %s\n", SexyStringToStringFast(theCompiledFilePath).c_str());
         free(aCompressedBuffer);
         return false;
     }
@@ -595,7 +595,7 @@ bool DefinitionReadCompiledFile(const SexyString& theCompiledFilePath, DefMap* t
     
     uint aDefHash = DefinitionCalcHash(theDefMap);  // 计算 CRC 校验值，后将用于检测数据的完整性
     if (aUncompressedSize < theDefMap->mDefSize + sizeof(uint)) {
-        TodTrace(__S("Compiled file size too small: %s\n"), theCompiledFilePath.c_str());
+        TodTrace("Compiled file size too small: %s\n", SexyStringToStringFast(theCompiledFilePath).c_str());
         delete[] (char *)aUncompressedBuffer;
         return false;
     } // 检测解压数据的长度是否足够“定义数据 + 一个校验值记录数据”的长度
@@ -606,7 +606,7 @@ bool DefinitionReadCompiledFile(const SexyString& theCompiledFilePath, DefMap* t
     uint aCashHash;
     SMemR(aBufferPtr, &aCashHash, sizeof(uint));  // 读取记录的 CRC 校验值
     if (aCashHash != aDefHash) {
-        TodTrace(__S("Compiled file schema wrong: %s\n"), theCompiledFilePath.c_str());
+        TodTrace("Compiled file schema wrong: %s\n", SexyStringToStringFast(theCompiledFilePath).c_str());
         delete[] (char *)aUncompressedBuffer;
         return false;
     } // 判断校验值是否一致，若不一致则说明数据发生错误
@@ -621,7 +621,7 @@ bool DefinitionReadCompiledFile(const SexyString& theCompiledFilePath, DefMap* t
     size_t aReadMemSize = (uintptr_t)aBufferPtr - (uintptr_t)aUncompressedBuffer;
     delete[] (char *)aUncompressedBuffer;
     if (aResult && aReadMemSize != aUncompressedSize) {
-        TodTrace(__S("Compiled file wrong size: %s\n"), theCompiledFilePath.c_str());
+        TodTrace("Compiled file wrong size: %s\n", SexyStringToStringFast(theCompiledFilePath).c_str());
         return false;
     }
     return aResult;
@@ -635,7 +635,7 @@ SexyString DefinitionGetCompiledFilePathFromXMLFilePath(const SexyString& theXML
 
 bool IsFileInPakFile(const SexyString& theFilePath)
 {
-    PFILE* pFile = p_fopen(theFilePath.c_str(), __S("rb"));
+    PFILE* pFile = p_fopen(SexyStringToStringFast(theFilePath).c_str(), "rb");
     bool aIsInPak = pFile && !pFile->mFP;  // 通过 mPakRecordMap.find 找到并打开的文件，其 mFP 为空指针（因为不是从实际文件中打开的）
     if (pFile)
     {
@@ -652,13 +652,13 @@ bool DefinitionIsCompiled(const SexyString& theXMLFilePath)
 
     struct stat attr;
 
-    if (stat(aCompiledFilePath.c_str(), &attr) != 0)
+    if (stat(SexyStringToStringFast(aCompiledFilePath).c_str(), &attr) != 0)
         return false;
     time_t aCompiledFileTime = attr.st_mtime;
 
-    if (stat(theXMLFilePath.c_str(), &attr) != 0)
+    if (stat(SexyStringToStringFast(theXMLFilePath).c_str(), &attr) != 0)
     {
-        TodTrace(__S("Can't file source file to compile '%s'"), theXMLFilePath.c_str());
+        TodTrace("Can't file source file to compile '%s'", SexyStringToStringFast(theXMLFilePath).c_str());
         return false;
     }
     time_t aXMLFileTime = attr.st_mtime;
@@ -694,7 +694,7 @@ void DefinitionXmlError(XMLParser* theXmlParser, const char* theFormat, ...)
 {
     va_list argList;
     va_start(argList, theFormat);
-    std::string aFormattedMessage = SexyStringToString(vformat(theFormat, argList));
+    std::string aFormattedMessage = vformat(theFormat, argList);
     va_end(argList);
 
     int aLine = theXmlParser->GetCurrentLineNum();
@@ -787,7 +787,7 @@ bool DefinitionReadStringField(XMLParser* theXmlParser, char** theValue)
     {
         // copy the null terminator too
         *theValue = (char*)DefinitionAlloc(aStringValue.size()+1);
-        strncpy(*theValue, aStringValue.c_str(), aStringValue.size()+1);
+        strncpy(*theValue, SexyStringToStringFast(aStringValue).c_str(), aStringValue.size()+1);
     }
     return true;
 }
@@ -798,7 +798,7 @@ bool DefinitionReadEnumField(XMLParser* theXmlParser, int* theValue, DefSymbol* 
     if (!DefinitionReadXMLString(theXmlParser, aStringValue))
         return false;
 
-    if (DefSymbolValueFromString(theSymbolMap, aStringValue.c_str(), theValue))
+    if (DefSymbolValueFromString(theSymbolMap, SexyStringToStringFast(aStringValue).c_str(), theValue))
         return true;
 
     DefinitionXmlError(theXmlParser, "Can't parse enum value '%s'", aStringValue.c_str());
@@ -900,7 +900,8 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
     float aValue = 0;
     int aLen = 0;
 
-    const char *aStringChars = aStringValue.c_str();
+    std::string String = SexyStringToStringFast(aStringValue);
+    const char *aStringChars = String.c_str();
     size_t anIdx = 0;
 
     theTrack->mCountNodes = 0;
@@ -920,7 +921,7 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
         if (aStringChars[anIdx] == '[') {
             // <range>
             anIdx++;
-            if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1) return false; // mLowValue
+            if (sexysscanf(StringToSexyStringFast(aStringChars).c_str() + anIdx, __S("%f%n"), &aValue, &aLen) != 1) return false; // mLowValue
             anIdx += aLen;
             aTrackNode.mLowValue = aValue;
             aTrackNode.mHighValue = aValue;
@@ -936,7 +937,7 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
                         break;
                     }
                 }
-                switch(sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen)) // mHighValue
+                switch(sexysscanf(StringToSexyStringFast(aStringChars).c_str() + anIdx, __S("%f%n"), &aValue, &aLen)) // mHighValue
                 { 
                 case 1: // Float read successfully
                     anIdx += aLen; 
@@ -954,7 +955,7 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
 
             if (aStringChars[anIdx] == ',') {
                 anIdx++;
-                if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1) return false; // mTime
+                if (sexysscanf(StringToSexyStringFast(aStringChars).c_str() + anIdx, __S("%f%n"), &aValue, &aLen) != 1) return false; // mTime
                 anIdx += aLen;
                 aTrackNode.mTime = aValue * 0.01;
             }
@@ -962,7 +963,7 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
             anIdx++;
         } else {
             // <norange>
-            if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1) return false; // mLow/HighValue
+            if (sexysscanf(StringToSexyStringFast(aStringChars).c_str() + anIdx, __S("%f%n"), &aValue, &aLen) != 1) return false; // mLow/HighValue
             anIdx += aLen;
             aTrackNode.mLowValue = aValue;
             aTrackNode.mHighValue = aValue;
@@ -971,7 +972,7 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
     
             if (aStringChars[anIdx] == ',') {
                 anIdx++;
-                if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1) return false; // mTime
+                if (sexysscanf(StringToSexyStringFast(aStringChars).c_str() + anIdx, __S("%f%n"), &aValue, &aLen) != 1) return false; // mTime
                 anIdx += aLen;
                 aTrackNode.mTime = aValue * 0.01;
             }
@@ -1047,7 +1048,7 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
 bool DefinitionReadFlagField(XMLParser* theXmlParser, const SexyString& theElementName, uint* theResultValue, DefSymbol* theSymbolMap)
 {
     int aValue;
-    if (!DefSymbolValueFromString(theSymbolMap, theElementName.c_str(), &aValue))
+    if (!DefSymbolValueFromString(theSymbolMap, SexyStringToStringFast(theElementName).c_str(), &aValue))
         return false;
 
     SexyString aStringValue;
@@ -1132,7 +1133,7 @@ bool DefinitionReadField(XMLParser* theXmlParser, DefMap* theDefMap, void* theDe
         if (aField->mFieldType == DefFieldType::DT_FLAGS && DefinitionReadFlagField(theXmlParser, aXMLElement.mValue, (uint*)pVar, (DefSymbol*)aField->mExtraData))
             return true;
         
-        if (strcasecmp(aXMLElement.mValue.c_str(), aField->mFieldName) == 0)  // 判断 aXMLElement 定义的是否为该成员变量
+        if (sexystricmp(aXMLElement.mValue.c_str(), StringToSexyStringFast(aField->mFieldName).c_str()) == 0)  // 判断 aXMLElement 定义的是否为该成员变量
         {
             bool aSuccess;
             switch (aField->mFieldType)
@@ -1287,10 +1288,10 @@ bool DefinitionWriteCompiledFile(const SexyString& theCompiledFilePath, DefMap* 
 
     delete[] (uint *)aDefBasePtr; // already compressed, no need to keep this instance alive
 
-    std::string aFilePath = GetFileDir(theCompiledFilePath);
+    std::string aFilePath = GetFileDir(SexyStringToStringFast(theCompiledFilePath));
     MkDir(aFilePath);
 
-    auto aFileStream = fopen(theCompiledFilePath.c_str(), "wb");
+    auto aFileStream = fopen(SexyStringToStringFast(theCompiledFilePath).c_str(), "wb");
     if (aFileStream) {
         unsigned int aBytesWritten = fwrite(aCompressedDef, 1u, aCompressedSize, aFileStream);
 
@@ -1307,9 +1308,9 @@ bool DefinitionWriteCompiledFile(const SexyString& theCompiledFilePath, DefMap* 
 bool DefinitionCompileFile(const SexyString theXMLFilePath, const SexyString& theCompiledFilePath, DefMap* theDefMap, void* theDefinition)
 {
     XMLParser aXMLParser = XMLParser();
-    if (!aXMLParser.OpenFile(theXMLFilePath))
+    if (!aXMLParser.OpenFile(SexyStringToStringFast(theXMLFilePath)))
     {
-        TodTrace(__S("XML file not found: %s\n"), theXMLFilePath.c_str());
+        TodTrace("XML file not found: %s\n", SexyStringToStringFast(theXMLFilePath).c_str());
         return false;
     }
     else if (!DefinitionLoadMap(&aXMLParser, theDefMap, theDefinition))
@@ -1323,11 +1324,11 @@ bool DefinitionCompileAndLoad(const SexyString& theXMLFilePath, DefMap* theDefMa
 {
 #ifdef _DEBUG  // 内测版执行的内容
 
-    TodHesitationTrace(__S("predef"));
+    TodHesitationTrace("predef");
     SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
     if (DefinitionIsCompiled(theXMLFilePath) && DefinitionReadCompiledFile(aCompiledFilePath, theDefMap, theDefinition))
     {
-        TodHesitationTrace(__S("loaded %s"), aCompiledFilePath.c_str());
+        TodHesitationTrace("loaded %s", aCompiledFilePath.c_str());
         return true;
     }
     else
@@ -1335,8 +1336,8 @@ bool DefinitionCompileAndLoad(const SexyString& theXMLFilePath, DefMap* theDefMa
         PerfTimer aTimer;
         aTimer.Start();
         bool aResult = DefinitionCompileFile(theXMLFilePath, aCompiledFilePath, theDefMap, theDefinition);
-        TodTrace(__S("compile %d ms:'%s'"), (int)aTimer.GetDuration(), aCompiledFilePath.c_str());
-        TodHesitationTrace(__S("compiled %s"), aCompiledFilePath.c_str());
+        TodTrace("compile %d ms:'%s'", (int)aTimer.GetDuration(), aCompiledFilePath.c_str());
+        TodHesitationTrace("compiled %s", aCompiledFilePath.c_str());
         return aResult;
     }
 
@@ -1346,7 +1347,7 @@ bool DefinitionCompileAndLoad(const SexyString& theXMLFilePath, DefMap* theDefMa
     if (DefinitionReadCompiledFile(aCompiledFilePath, theDefMap, theDefinition))
         return true;
 
-    TodErrorMessageBox(StrFormat(__S("missing resource %s"), aCompiledFilePath.c_str()).c_str(), __S("Error"));
+    TodErrorMessageBox(SexyStringToString(StrFormat(__S("missing resource %s"), aCompiledFilePath.c_str())).c_str(), "Error");
     exit(0);
     
 #endif

@@ -21,6 +21,7 @@
 #include <cstdlib>
 #include <cstdint>
 #include <ctime>
+#include <climits>
 
 #ifdef _WIN32
 #define NOMINMAX 1
@@ -88,25 +89,41 @@ typedef struct _GUID {
 #define unreachable __builtin_unreachable
 #endif
 
+#define _USE_WIDE_STRING
 // Removed wide string support
-typedef std::string			SexyString;
-#define __S(x)				x
+typedef std::wstring			SexyString;
+#define __S(x)				L ##x
+inline int sexywtoi(const wchar_t* str)
+{
+    wchar_t* end;
+    long val = wcstol(str, &end, 10);
+    if (end == str || *end != L'\0') {
+        // 非法输入，可返回 0 或抛异常
+        return 0;
+    }
+    if (val > INT_MAX || val < INT_MIN) {
+        // 溢出处理
+        return 0;
+    }
+    return static_cast<int>(val);
+}
 
-#define sexystrncmp			strncmp
-#define sexystrcmp			strcmp
-#define sexystricmp			strcasecmp
-#define sexysscanf			sscanf
-#define sexyatoi			atoi
-#define sexystrcpy			strcpy
-#define sexystrlen			strlen
-#define sexyisdigit			isdigit
-#define sexyisalnum			isalnum
-#define sexystrchr			strchr
+#define sexystrncmp			wcsncmp
+#define sexystrcmp			wcscmp
+#define sexystricmp			wcscasecmp
+#define sexysscanf			swscanf
+#define sexyatoi			sexywtoi
+#define sexystrcpy			wcscpy
+#define sexystrncpy			wcsncpy
+#define sexystrlen			wcslen
+#define sexyisdigit			iswdigit
+#define sexyisalnum			iswalnum
+#define sexystrchr			wcschr
 
-#define SexyStringToStringFast(x)	(x)
-#define SexyStringToWStringFast(x)	StringToWString(x)
-#define StringToSexyStringFast(x)	(x)
-#define WStringToSexyStringFast(x)	WStringToString(x)
+#define SexyStringToStringFast(x)	WStringToString(x)
+#define SexyStringToWStringFast(x)	(x)
+#define StringToSexyStringFast(x)	StringToWString(x)
+#define WStringToSexyStringFast(x)	(x)
 
 #define LONG_BIGE_TO_NATIVE(l) (((l >> 24) & 0xFF) | ((l >> 8) & 0xFF00) | ((l << 8) & 0xFF0000) | ((l << 24) & 0xFF000000))
 #define WORD_BIGE_TO_NATIVE(w) (((w >> 8) & 0xFF) | ((w << 8) & 0xFF00))
@@ -254,7 +271,10 @@ inline void			inlineTrim(std::string &theData, const std::string& theChars = " \
 	inlineLTrim(theData, theChars);
 }
 
-struct StringLessNoCase { bool operator()(const std::string &s1, const std::string &s2) const { return _stricmp(s1.c_str(),s2.c_str())<0; } };
+struct StringLessNoCase { 
+	bool operator()(const std::wstring &s1, const std::wstring &s2) const { return wcscasecmp(s1.c_str(),s2.c_str())<0; } 
+	bool operator()(const std::string &s1, const std::string &s2) const { return strcasecmp(s1.c_str(),s2.c_str())<0; }
+};
 
 }
 

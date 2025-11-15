@@ -21,26 +21,26 @@
 Rect aBackButtonRect = { 120, 35, 130, 80 };
 
 AchievementItem gAchievementList[MAX_ACHIEVEMENTS] = {
-	{ "Home Lawn Security", "Complete Adventure Mode." },
-	{ "Nobel Peas Prize", "Get the golden sunflower trophy." },
-	{ "Better Off Dead", "Get to a streak of 10 in I, Zombie Endless" },
-	{ "China Shop", "Get to a streak of 15 in Vasebreaker Endless" },
-	{ "SPUDOW!", "Blow up a zombie using a Potato Mine." },
-	{ "Explodonator", "Take out 10 full-sized zombies with a single Cherry Bomb." },
-	{ "Morticulturalist", "Collect all 49 plants (including plants from Crazy Dave's shop)." },
-	{ "Don't Pea in the Pool", "Complete a daytime pool level without using pea shooters of any kind." },
-	{ "Roll Some Heads", "Bowl over 5 zombies with the same wall-nut." },
-	{ "Grounded", "Defeat a normal roof level without using any catapult plants." },
-	{ "Zombologist", "Discover the Yeti zombie." },
-	{ "Penny Pincher", "Pick up 30 coins in a row on a single level without letting any disappear." },
-	{ "Sunny Days", "Get 8000 sun during a single level." },
-	{ "Popcorn Party", "Defeat 2 Gargantuars with Corn Cob missiles in a single level." },
-	{ "Good Morning", "Complete a daytime level by planting only Mushrooms and Coffee Beans." },
-	{ "No Fungus Among Us", "Complete a nighttime level without planting any Mushrooms." },
-	{ "Beyond the Grave", "Beat all 20 mini games." },
-	{ "Immortal", "Survive 20 waves of pure zombie ferocity." },
-	{ "Towering Wisdom", "Grow the Tree of Wisdom to 100 feet." },
-	{ "Mustache Mode", "Enable Mustache Mode" }
+	{ __S("Home Lawn Security"), __S("Complete Adventure Mode.") },
+	{ __S("Nobel Peas Prize"), __S("Get the golden sunflower trophy.") },
+	{ __S("Better Off Dead"), __S("Get to a streak of 10 in I, Zombie Endless") },
+	{ __S("China Shop"), __S("Get to a streak of 15 in Vasebreaker Endless") },
+	{ __S("SPUDOW!"), __S("Blow up a zombie using a Potato Mine.") },
+	{ __S("Explodonator"), __S("Take out 10 full-sized zombies with a single Cherry Bomb.") },
+	{ __S("Morticulturalist"), __S("Collect all 49 plants (including plants from Crazy Dave's shop).") },
+	{ __S("Don't Pea in the Pool"), __S("Complete a daytime pool level without using pea shooters of any kind.") },
+	{ __S("Roll Some Heads"), __S("Bowl over 5 zombies with the same wall-nut.") },
+	{ __S("Grounded"), __S("Defeat a normal roof level without using any catapult plants.") },
+	{ __S("Zombologist"), __S("Discover the Yeti zombie.") },
+	{ __S("Penny Pincher"), __S("Pick up 30 coins in a row on a single level without letting any disappear.") },
+	{ __S("Sunny Days"), __S("Get 8000 sun during a single level.") },
+	{ __S("Popcorn Party"), __S("Defeat 2 Gargantuars with Corn Cob missiles in a single level.") },
+	{ __S("Good Morning"), __S("Complete a daytime level by planting only Mushrooms and Coffee Beans.") },
+	{ __S("No Fungus Among Us"), __S("Complete a nighttime level without planting any Mushrooms.") },
+	{ __S("Beyond the Grave"), __S("Beat all 20 mini games.") },
+	{ __S("Immortal"), __S("Survive 20 waves of pure zombie ferocity.") },
+	{ __S("Towering Wisdom"), __S("Grow the Tree of Wisdom to 100 feet.") },
+	{ __S("Mustache Mode"), __S("Enable Mustache Mode") }
 };
 
 // GOTY @Patoke: 0x401000
@@ -220,8 +220,8 @@ void ReportAchievement::GiveAchievement(LawnApp* theApp, int theAchievement, boo
 	if (!theForceGive)
 		return;
 
-	std::string aAchievementName = gAchievementList[theAchievement].name;
-	aAchievementName.append(" Achievement!");
+	SexyString aAchievementName = gAchievementList[theAchievement].name;
+	aAchievementName.append(__S(" Achievement!"));
 
 	theApp->mBoard->DisplayAdvice(aAchievementName, MESSAGE_STYLE_ACHIEVEMENT, AdviceType::ADVICE_NONE);
 	theApp->PlaySample(SOUND_ACHIEVEMENT);

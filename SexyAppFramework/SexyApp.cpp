@@ -160,7 +160,7 @@ void SexyApp::ReadFromRegistry()
 
 	RegistryReadString("ReferId", &mReferId);
 	mReferId = GetString("ReferId", mReferId);
-	mRegisterLink = "http://www.popcap.com/register.php?theGame=" + mProdName + "&referid=" + mReferId;	
+	mRegisterLink = __S("http://www.popcap.com/register.php?theGame=") + StringToSexyString(mProdName) + __S("&referid=") + mReferId;	
 	RegistryReadString("RegisterLink", &mRegisterLink);
 
 	int anInt;
@@ -353,8 +353,8 @@ bool SexyApp::OpenRegisterPage(DefinesMap theStatsMap)
 	aDefinesMap.insert(DefinesMap::value_type("Src", mRegSource));
 	aDefinesMap.insert(DefinesMap::value_type("ProdName", mProdName));
 	aDefinesMap.insert(DefinesMap::value_type("Version", mProductVersion));
-	aDefinesMap.insert(DefinesMap::value_type("Variation", mVariation));
-	aDefinesMap.insert(DefinesMap::value_type("ReferId", mReferId));
+	aDefinesMap.insert(DefinesMap::value_type("Variation", SexyStringToString(mVariation)));
+	aDefinesMap.insert(DefinesMap::value_type("ReferId", SexyStringToString(mReferId)));
 	aDefinesMap.insert(DefinesMap::value_type("DownloadId", StrFormat("%d", mDownloadId)));
 	aDefinesMap.insert(DefinesMap::value_type("TimesPlayed", StrFormat("%d", mTimesPlayed)));
 	aDefinesMap.insert(DefinesMap::value_type("TimesExecuted", StrFormat("%d", mTimesExecuted)));
@@ -384,7 +384,7 @@ bool SexyApp::OpenRegisterPage(DefinesMap theStatsMap)
 	}
 	else
 	{
-		return OpenURL(mRegisterLink);
+		return OpenURL(SexyStringToString(mRegisterLink));
 	}	
 }
 
@@ -543,7 +543,7 @@ std::string SexyApp::GetGameSEHInfo()
 	if (mReferId.length() != 0)
 	{
 		anInfoString +=
-			"ReferId: " + mReferId + "\r\n";
+			"ReferId: " + SexyStringToString(mReferId) + "\r\n";
 	}
 
 	return anInfoString;
@@ -551,10 +551,10 @@ std::string SexyApp::GetGameSEHInfo()
 
 void SexyApp::GetSEHWebParams(DefinesMap* theDefinesMap)
 {
-	theDefinesMap->insert(DefinesMap::value_type("username", mUserName));
+	theDefinesMap->insert(DefinesMap::value_type("username", SexyStringToString(mUserName)));
 	theDefinesMap->insert(DefinesMap::value_type("buildnum", StrFormat("%d", mBuildNum)));
 	theDefinesMap->insert(DefinesMap::value_type("builddate", mBuildDate));
-	theDefinesMap->insert(DefinesMap::value_type("referid", mReferId));	
+	theDefinesMap->insert(DefinesMap::value_type("referid", SexyStringToString(mReferId)));	
 }
 
 void SexyApp::PreDisplayHook()
@@ -580,12 +580,12 @@ void SexyApp::InitPropertiesHook()
 		mBuildUnlocked = true;
 	}
 
-	mProdName = GetString("ProdName", mProdName);
+	mProdName = SexyStringToString(GetString("ProdName", StringToSexyString(mProdName)));
 	mIsWindowed = GetBoolean("DefaultWindowed", mIsWindowed);	
 
-	std::string aNewTitle = GetString("Title", "");
+	SexyString aNewTitle = GetString("Title", __S(""));
 	if (aNewTitle.length() > 0)
-		mTitle = aNewTitle + " " + mProductVersion;	
+		mTitle = aNewTitle + __S(" ") + StringToSexyString(mProductVersion);	
 		
 	//mInternetManager->Init();
 	mBetaSupport = nullptr;//new BetaSupport(this);

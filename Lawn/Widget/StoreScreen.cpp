@@ -1131,14 +1131,14 @@ void StoreScreen::MouseDown(int x, int y, int theClickCount)
             if (IsFullVersionOnly(aItemType))
             {
                 mWaitForDialog = true;
-                mApp->LawnMessageBox(DIALOG_MESSAGE, "[GET_FULL_VERSION_TITLE]", "[FULL_VERSION_TO_BUY]", "[DIALOG_BUTTON_OK]", "", BUTTONS_FOOTER);
+                mApp->LawnMessageBox(DIALOG_MESSAGE, __S("[GET_FULL_VERSION_TITLE]"), __S("[FULL_VERSION_TO_BUY]"), __S("[DIALOG_BUTTON_OK]"), __S(""), BUTTONS_FOOTER);
                 mWaitForDialog = false;
             }
             else if (aItemType == STORE_ITEM_PVZ)
             {
                 mWaitForDialog = true;
                 int aResult = mApp->LawnMessageBox(
-                    DIALOG_MESSAGE, "[BUY_PVZ_TITLE]", "[BUY_PVZ_BODY]", "[GET_FULL_VERSION_YES_BUTTON]", "[GET_FULL_VERSION_NO_BUTTON]", BUTTONS_YES_NO);
+                    DIALOG_MESSAGE, __S("[BUY_PVZ_TITLE]"), __S("[BUY_PVZ_BODY]"), __S("[GET_FULL_VERSION_YES_BUTTON]"), __S("[GET_FULL_VERSION_NO_BUTTON]"), BUTTONS_YES_NO);
                 mWaitForDialog = false;
                 if (aResult == ID_OK)
                 {

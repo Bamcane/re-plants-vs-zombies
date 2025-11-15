@@ -123,12 +123,12 @@ ParticleParams gLawnParticleArray[(int)ParticleEffect::NUM_PARTICLES] = {
 //0x515640 : (ecx = *theParticleFileName, *theParticleDef)  //esp -= 4
 bool TodParticleLoadADef(TodParticleDefinition* theParticleDef, const char* theParticleFileName)
 {
-	TodHesitationBracket(__S("Load Particle %s"), theParticleFileName);
-	if (!DefinitionLoadXML(theParticleFileName, &gParticleDefMap, theParticleDef))
+	TodHesitationBracket("Load Particle %s", theParticleFileName);
+	if (!DefinitionLoadXML(StringToSexyStringFast(theParticleFileName), &gParticleDefMap, theParticleDef))
 	{
 		char aBuf[512];
-		sprintf(aBuf, __S("Failed to load particle '%s'"), theParticleFileName);
-		TodErrorMessageBox(aBuf, __S("Error"));
+		sprintf(aBuf, "Failed to load particle '%s'", theParticleFileName);
+		TodErrorMessageBox(aBuf, "Error");
 		return false;
 	}
 	else

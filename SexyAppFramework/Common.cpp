@@ -212,33 +212,14 @@ std::wstring Sexy::StringToLower(const std::wstring& theString)
 
 std::wstring Sexy::StringToWString(const std::string &theString)
 {
-	std::wstring aString;
-	aString.reserve(theString.length());
-	for(size_t i = 0; i < theString.length(); ++i)
-		aString += (unsigned char)theString[i];
-	return aString;
+	std::wstring_convert<std::codecvt_utf8<wchar_t> > cv;
+	return cv.from_bytes(theString);
 }
 
 std::string Sexy::WStringToString(const std::wstring &theString)
 {
-	size_t aRequiredLength = wcstombs( NULL, theString.c_str(), 0 );
-	if (aRequiredLength < 16384)
-	{
-		char aBuffer[16384];
-		wcstombs( aBuffer, theString.c_str(), 16384 );
-		return std::string(aBuffer);
-	}
-	else
-	{
-		DBG_ASSERTE(aRequiredLength != (size_t)-1);
-		if (aRequiredLength == (size_t)-1) return "";
-
-		char* aBuffer = new char[aRequiredLength+1];
-		wcstombs( aBuffer, theString.c_str(), aRequiredLength+1 );
-		std::string aStr = aBuffer;
-		delete[] aBuffer;
-		return aStr;
-	}
+	std::wstring_convert<std::codecvt_utf8<wchar_t> > cv;
+	return cv.to_bytes(theString);
 }
 
 SexyString Sexy::StringToSexyString(const std::string& theString)
@@ -246,14 +227,14 @@ SexyString Sexy::StringToSexyString(const std::string& theString)
 #ifdef _USE_WIDE_STRING
 	return StringToWString(theString);
 #else
-	return SexyString(theString);
+	return theString;
 #endif
 }
 
 SexyString Sexy::WStringToSexyString(const std::wstring &theString)
 {
 #ifdef _USE_WIDE_STRING
-	return SexyString(theString);
+	return theString;
 #else
 	return WStringToString(theString);
 #endif
@@ -264,14 +245,14 @@ std::string Sexy::SexyStringToString(const SexyString& theString)
 #ifdef _USE_WIDE_STRING
 	return WStringToString(theString);
 #else
-	return std::string(theString);
+	return theString;
 #endif
 }
 
 std::wstring Sexy::SexyStringToWString(const SexyString& theString)
 {
 #ifdef _USE_WIDE_STRING
-	return std::wstring(theString);
+	return theString;
 #else
 	return StringToWString(theString);
 #endif
@@ -1007,6 +988,84 @@ std::string Sexy::StrFormat(const char* fmt ...)
     return result;
 }
 
+std::wstring ConvertPercentS(const std::wstring& fmt) {
+    std::wstring result;
+    result.reserve(fmt.size() + 16); // 预留空间
+
+    for (size_t i = 0; i < fmt.size(); ++i) {
+        if (fmt[i] == L'%') {
+            // 检查是否是 %%（转义）
+            if (i + 1 < fmt.size() && fmt[i + 1] == L'%') {
+                result += L"%%";
+                ++i; // 跳过下一个 %
+                continue;
+            }
+
+            // 查找格式说明符结尾（跳过 flags, width, precision, length）
+            size_t j = i + 1;
+            // 跳过 flags: [-+ #0]
+            while (j < fmt.size() && (fmt[j] == L'-' || fmt[j] == L'+' || 
+                   fmt[j] == L' ' || fmt[j] == L'#' || fmt[j] == L'0')) {
+                ++j;
+            }
+            // 跳过 width (数字或 *)
+            while (j < fmt.size() && iswdigit(fmt[j])) {
+                ++j;
+            }
+            if (j < fmt.size() && fmt[j] == L'*') {
+                ++j;
+            }
+            // 跳过 .precision
+            if (j < fmt.size() && fmt[j] == L'.') {
+                ++j;
+                if (j < fmt.size() && fmt[j] == L'*') {
+                    ++j;
+                } else {
+                    while (j < fmt.size() && iswdigit(fmt[j])) {
+                        ++j;
+                    }
+                }
+            }
+            // 跳过 length modifier (h, l, ll, L, z, t, j)
+            // 我们只关心是否有 'l'
+            bool has_l = false;
+            if (j < fmt.size() && fmt[j] == L'l') {
+                has_l = true;
+                ++j;
+                // 检查 ll
+                if (j < fmt.size() && fmt[j] == L'l') {
+                    ++j;
+                }
+            } else if (j < fmt.size() && (fmt[j] == L'h' || fmt[j] == L'L' ||
+                     fmt[j] == L'z' || fmt[j] == L't' || fmt[j] == L'j')) {
+                // 其他 length modifier，跳过
+                ++j;
+                // hh, ll 已处理，其他单字符
+            }
+
+            // 现在检查 conversion specifier
+            if (j < fmt.size() && fmt[j] == L's') {
+                if (!has_l) {
+                    // 将 %s 替换为 %ls
+                    result += L"%ls";
+                } else {
+                    // 已经是 %ls 或 %lls（虽然后者无效，但保留）
+                    result.append(fmt.begin() + i, fmt.begin() + j + 1);
+                }
+                i = j; // 继续从 specifier 后开始
+            } else {
+                // 不是 %s，原样复制
+                result.append(fmt.begin() + i, fmt.begin() + j + (j < fmt.size() ? 1 : 0));
+                i = j; // 注意：循环末尾还会 ++i，所以这里不要多加
+                if (j >= fmt.size()) break;
+            }
+        } else {
+            result += fmt[i];
+        }
+    }
+    return result;
+}
+
 std::wstring Sexy::vformat(const wchar_t* fmt, va_list argPtr) 
 {
     // We draw the line at a 1MB string.
@@ -1022,9 +1081,9 @@ std::wstring Sexy::vformat(const wchar_t* fmt, va_list argPtr)
 
 	int numChars = 0;
 #ifdef _WIN32
-	numChars = _vsnwprintf(stackBuffer, attemptedSize, fmt, argPtr);
+	numChars = _vsnwprintf(stackBuffer, attemptedSize, ConvertPercentS(fmt).c_str(), argPtr);
 #else
-	numChars = vswprintf(stackBuffer, attemptedSize, fmt, argPtr);
+	numChars = vswprintf(stackBuffer, attemptedSize, ConvertPercentS(fmt).c_str(), argPtr);
 #endif
 
 	//cout << "NumChars: " << numChars << endl;
@@ -1048,9 +1107,9 @@ std::wstring Sexy::vformat(const wchar_t* fmt, va_list argPtr)
         attemptedSize *= 2;
 		heapBuffer = (wchar_t*)realloc(heapBuffer, (attemptedSize + 1));
 #ifdef _WIN32
-		numChars = _vsnwprintf(heapBuffer, attemptedSize, fmt, argPtr);
+		numChars = _vsnwprintf(heapBuffer, attemptedSize, ConvertPercentS(fmt).c_str(), argPtr);
 #else
-		numChars = vswprintf(heapBuffer, attemptedSize, fmt, argPtr);
+		numChars = vswprintf(heapBuffer, attemptedSize, ConvertPercentS(fmt).c_str(), argPtr);
 #endif
     }
 
@@ -1062,6 +1121,7 @@ std::wstring Sexy::vformat(const wchar_t* fmt, va_list argPtr)
 
     return result;
 }
+
 
 //overloaded StrFormat: should only be used by the xml strings
 std::wstring Sexy::StrFormat(const wchar_t* fmt ...)

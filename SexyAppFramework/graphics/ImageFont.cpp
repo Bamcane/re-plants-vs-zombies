@@ -7,6 +7,9 @@
 #include "misc/AutoCrit.h"
 #include "fcaseopen/fcaseopen.h"
 
+#include <locale>
+#include <codecvt>
+
 using namespace Sexy;
 
 ////
@@ -254,11 +257,12 @@ bool FontData::GetColorFromDataElement(DataElement* theElement, Color& theColor)
 	return true;
 }
 
-static char32_t UTF8CharToUTF32Char(const std::string &theString)
+static char32_t UTF8CharToUTF32Char(const std::string& utf8Char)
 {
-	char32_t ret = 0;
-	memcpy(&ret, theString.data(), theString.length());
-	return ret;
+    if (utf8Char.empty()) return 0;
+    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> conv;
+    std::u32string u32 = conv.from_bytes(utf8Char);
+    return u32.empty() ? 0 : u32[0];
 }
 
 bool FontData::HandleCommand(const ListDataElement& theParams)

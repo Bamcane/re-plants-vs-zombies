@@ -383,7 +383,7 @@ void LawnApp::WriteToRegistry()
 {
 	if (mPlayerInfo)
 	{
-		RegistryWriteString("CurUser", SexyStringToStringFast(mPlayerInfo->mName));
+		RegistryWriteString("CurUser", mPlayerInfo->mName);
 		mPlayerInfo->SaveDetails();
 	}
 
@@ -680,12 +680,12 @@ void LawnApp::DoConfirmBackToMain()
 		true, 
 		__S("Leave Game?"/*"[LEAVE_GAME]"*/),
 		__S("Do you want to return\nto the main menu?\n\nYour game will be saved."/*"[LEAVE_GAME_HEADER]"*/), 
-		"", 
+		__S(""), 
 		Dialog::BUTTONS_YES_NO
 	);
 
-	aDialog->mLawnYesButton->mLabel = TodStringTranslate("[LEAVE_BUTTON]");
-	aDialog->mLawnNoButton->mLabel = TodStringTranslate("[DIALOG_BUTTON_CANCEL]");
+	aDialog->mLawnYesButton->mLabel = TodStringTranslate(__S("[LEAVE_BUTTON]"));
+	aDialog->mLawnNoButton->mLabel = TodStringTranslate(__S("[DIALOG_BUTTON_CANCEL]"));
 	//aDialog->CalcSize(0, 0);
 }
 
@@ -826,7 +826,7 @@ void LawnApp::FinishUserDialog(bool isYes)
 	{
 		if (isYes)
 		{
-			PlayerInfo* aProfile = mProfileMgr->GetProfile(StringToSexyStringFast(aUserDialog->GetSelName()));
+			PlayerInfo* aProfile = mProfileMgr->GetProfile(aUserDialog->GetSelName());
 			if (aProfile)
 			{
 				mPlayerInfo = aProfile;
@@ -1117,9 +1117,9 @@ Dialog* LawnApp::NewDialog(int theDialogId, bool isModal, const SexyString& theD
 		this, 
 		theDialogId, 
 		isModal, 
-		SexyStringToStringFast(theDialogHeader), 
-		SexyStringToStringFast(theDialogLines), 
-		SexyStringToStringFast(theDialogFooter), 
+		theDialogHeader, 
+		theDialogLines, 
+		theDialogFooter, 
 		theButtonMode
 	);
 
@@ -1289,10 +1289,10 @@ void LawnApp::Init()
 
 	mProfileMgr->Load();
 
-	std::string aCurUser;
+	SexyString aCurUser;
 	if (mPlayerInfo == nullptr && RegistryReadString("CurUser", &aCurUser))
 	{
-		mPlayerInfo = mProfileMgr->GetProfile(StringToSexyStringFast(aCurUser));
+		mPlayerInfo = mProfileMgr->GetProfile(aCurUser);
 	}
 	if (mPlayerInfo == nullptr)
 	{
@@ -2087,7 +2087,7 @@ SexyString LawnApp::GetStageString(int theLevel)
 {
 	int aArea = ClampInt((theLevel - 1) / LEVELS_PER_AREA + 1, 1, ADVENTURE_AREAS + 1);
 	int aSub = theLevel - (aArea - 1) * LEVELS_PER_AREA;
-	return StrFormat("%d-%d", aArea, aSub);
+	return StrFormat(__S("%d-%d"), aArea, aSub);
 }
 
 bool LawnApp::IsAdventureMode()
@@ -2746,7 +2746,7 @@ void LawnApp::CrazyDaveTalkMessage(const SexyString& theMessage)
 		}
 	}
 
-	aCrazyDaveReanim->SetImageOverride(__S("Dave_mouths"), nullptr);
+	aCrazyDaveReanim->SetImageOverride("Dave_mouths", nullptr);
 
 	if (mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_TALKING || doSound)
 	{
@@ -3013,19 +3013,19 @@ void LawnApp::UpdateCrazyDave()
 
 	if (mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_IDLING || mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_HANDING_IDLING)
 	{
-		if (mCrazyDaveMessageText.find("{MOUTH_BIG_SMILE}") != std::string::npos)
+		if (mCrazyDaveMessageText.find(__S("{MOUTH_BIG_SMILE}")) != std::string::npos)
 		{
 			aCrazyDaveReanim->SetImageOverride("Dave_mouths", IMAGE_REANIM_CRAZYDAVE_MOUTH1);
 		}
-		else if (mCrazyDaveMessageText.find("{MOUTH_SMALL_SMILE}") != std::string::npos)
+		else if (mCrazyDaveMessageText.find(__S("{MOUTH_SMALL_SMILE}")) != std::string::npos)
 		{
 			aCrazyDaveReanim->SetImageOverride("Dave_mouths", IMAGE_REANIM_CRAZYDAVE_MOUTH5);
 		}
-		else if (mCrazyDaveMessageText.find("{MOUTH_BIG_OH}") != std::string::npos)
+		else if (mCrazyDaveMessageText.find(__S("{MOUTH_BIG_OH}")) != std::string::npos)
 		{
 			aCrazyDaveReanim->SetImageOverride("Dave_mouths", IMAGE_REANIM_CRAZYDAVE_MOUTH4);
 		}
-		else if (mCrazyDaveMessageText.find("{MOUTH_SMALL_OH}") != std::string::npos)
+		else if (mCrazyDaveMessageText.find(__S("{MOUTH_SMALL_OH}")) != std::string::npos)
 		{
 			aCrazyDaveReanim->SetImageOverride("Dave_mouths", IMAGE_REANIM_CRAZYDAVE_MOUTH6);
 		}

@@ -36,8 +36,8 @@ enum AchievementId {
 // todo @Patoke: add these
 class AchievementItem {
 public:
-    std::string name;
-    std::string description;
+    SexyString name;
+    SexyString description;
 };
 
 extern AchievementItem gAchievementList[MAX_ACHIEVEMENTS];

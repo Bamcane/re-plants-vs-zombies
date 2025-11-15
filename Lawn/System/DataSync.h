@@ -61,9 +61,9 @@ public:
 	void					WriteDouble(double theDouble);
 	void					WriteString(const SexyString& theStr);
 	inline uint32_t	GetPos();
-	inline void				SetLong(uint32_t, uint32_t) { /* δ�ҵ� */ }
-	inline void				SetShort(unsigned int, uint32_t) { /* δ�ҵ� */ }
-	inline void				SetByte(unsigned int, uint32_t) { /* δ�ҵ� */ }
+	inline void				SetLong(uint32_t, uint32_t) { /* δ�ҵ� */ }
+	inline void				SetShort(unsigned int, uint32_t) { /* δ�ҵ� */ }
+	inline void				SetByte(unsigned int, uint32_t) { /* δ�ҵ� */ }
 	inline void*			GetDataPtr() { return mData; }
 	inline int				GetDataLen() { return mDataLen; }
 };
@@ -91,7 +91,7 @@ public:
 	DataSync(DataWriter& theWriter);
 	virtual ~DataSync();
 
-	inline void				SyncPointers() { /* δ�ҵ� */ }
+	inline void				SyncPointers() { /* δ�ҵ� */ }
 	inline void				SetReader(DataReader* theReader) { mReader = theReader; }
 	inline void				SetWriter(DataWriter* theWriter) { mWriter = theWriter; }
 	inline DataReader*		GetReader() { return mReader; }
@@ -143,8 +143,8 @@ public:
 	void					SyncFloat(float& theFloat);
 	void					SyncDouble(double& theDouble);
 	void					SyncString(SexyString& theStr);
-	inline void				SyncPointer(void**) { /* δ�ҵ� */ }
-	inline void				RegisterPointer(void*) { /* δ�ҵ� */ }
+	inline void				SyncPointer(void**) { /* δ�ҵ� */ }
+	inline void				RegisterPointer(void*) { /* δ�ҵ� */ }
 	inline void				SetVersion(int theVersion) { mVersion = theVersion; }
 	inline int				GetVersion() const { return mVersion; }
 };

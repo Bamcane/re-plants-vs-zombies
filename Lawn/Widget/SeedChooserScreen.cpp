@@ -28,7 +28,7 @@ SeedChooserScreen::SeedChooserScreen()
 	mApp = (LawnApp*)gSexyAppBase;
 	mBoard = mApp->mBoard;
 	mClip = false;
-	// mSeedChooserAge = 0;  原版并没有初始化 mSeedChooserAge
+	// mSeedChooserAge = 0;  原锟芥并没锟叫筹拷始锟斤拷 mSeedChooserAge
 	mSeedsInFlight = 0;
 	mSeedsInBank = 0;
 	mLastMouseX = -1;
@@ -435,7 +435,7 @@ void SeedChooserScreen::UpdateViewLawn()
 {
 	if (mChooseState != CHOOSE_VIEW_LAWN) return;
 	mViewLawnTime++;
-	if (mViewLawnTime == 100) mBoard->DisplayAdviceAgain("[CLICK_TO_CONTINUE]", MESSAGE_STYLE_HINT_STAY, ADVICE_CLICK_TO_CONTINUE);
+	if (mViewLawnTime == 100) mBoard->DisplayAdviceAgain(__S("[CLICK_TO_CONTINUE]"), MESSAGE_STYLE_HINT_STAY, ADVICE_CLICK_TO_CONTINUE);
 	else if (mViewLawnTime == 251) mViewLawnTime = 250;
 
 	int aBoardX = BOARD_IMAGE_WIDTH_OFFSET - mApp->mWidth;
@@ -748,7 +748,7 @@ void SeedChooserScreen::ButtonDepress(int theId)
 	else if (theId == SeedChooserScreen::SeedChooserScreen_Store)
 	{
 		StoreScreen* aStore = mApp->ShowStoreScreen();
-		aStore->mBackButton->SetLabel("[STORE_BACK_TO_GAME]");
+		aStore->mBackButton->SetLabel(__S("[STORE_BACK_TO_GAME]"));
 		aStore->WaitForResult();
 		if (aStore->mGoToTreeNow)
 		{

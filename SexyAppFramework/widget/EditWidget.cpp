@@ -203,7 +203,7 @@ void EditWidget::GotFocus()
 	std::string value;
 	bool wrote = mWidgetManager->mApp->StartTextInput(value);
 	if (wrote)
-		SetText(value);
+		SetText(StringToSexyStringFast(value));
 }
 
 void EditWidget::LostFocus()

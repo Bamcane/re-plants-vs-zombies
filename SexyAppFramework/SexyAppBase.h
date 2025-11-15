@@ -56,8 +56,10 @@ typedef std::list<Dialog*> DialogList;
 typedef std::vector<std::string> StringVector;
 //typedef std::basic_string<TCHAR> tstring; // string of TCHARs
 
+typedef std::map<SexyString, std::wstring> SexyStringWStringMap;
 typedef std::map<std::string, SexyString> StringSexyStringMap;
 typedef std::map<std::string, std::string> StringStringMap;
+typedef std::map<std::string, std::wstring> StringWStringMap;
 typedef std::map<std::string, std::wstring> StringWStringMap;
 typedef std::map<std::string, bool> StringBoolMap;
 typedef std::map<std::string, int> StringIntMap;
@@ -140,7 +142,7 @@ public:
 	std::string				mFullCompanyName;
 	std::string				mProdName;	
 	SexyString				mTitle;	
-	std::string				mRegKey;
+	SexyString				mRegKey;
 	std::string				mChangeDirTo;
 	
 	int						mRelaxUpdateBacklogCount; // app doesn't try to catch up for this many frames
@@ -193,7 +195,7 @@ public:
 	bool					mAlphaDisabled;
 	MusicInterface*			mMusicInterface;	
 	bool					mReadFromRegistry;
-	std::string				mRegisterLink;
+	SexyString				mRegisterLink;
 	std::string				mProductVersion;	
 	Image*					mCursorImages[NUM_CURSORS];
 	//HCURSOR					mOverrideCursor;
@@ -327,7 +329,7 @@ public:
 	bool					mEnableWindowAspect;
 	Ratio					mWindowAspect;
 
-	StringWStringMap		mStringProperties;
+	SexyStringWStringMap		mStringProperties;
 	StringBoolMap			mBoolProperties;
 	StringIntMap			mIntProperties;
 	StringDoubleMap			mDoubleProperties;
@@ -558,11 +560,11 @@ public:
 
 	// Registry access methods
 	//bool					RegistryGetSubKeys(const std::string& theKeyName, StringVector* theSubKeys);
-	bool					RegistryReadString(const std::string& theValueName, std::string* theString);
+	bool					RegistryReadString(const std::string& theValueName, SexyString* theString);
 	bool					RegistryReadInteger(const std::string& theValueName, int* theValue);
 	bool					RegistryReadBoolean(const std::string& theValueName, bool* theValue);
 	bool					RegistryReadData(const std::string& theValueName, uchar* theValue, uint32_t* theLength);
-	bool					RegistryWriteString(const std::string& theValueName, const std::string& theString);
+	bool					RegistryWriteString(const std::string& theValueName, const SexyString& theString);
 	bool					RegistryWriteInteger(const std::string& theValueName, int theValue);
 	bool					RegistryWriteBoolean(const std::string& theValueName, bool theValue);
 	bool					RegistryWriteData(const std::string& theValueName, const uchar* theValue, uint32_t theLength);	

@@ -164,14 +164,14 @@ void TodStringListLoad(const char* theFileName)
 //0x519410
 SexyString TodStringListFind(const SexyString& theName)
 {
-	std::string aNameString = Sexy::SexyStringToString(theName);
-	StringWStringMap::iterator anItr = gSexyAppBase->mStringProperties.find(aNameString);
+	SexyStringWStringMap::iterator anItr = gSexyAppBase->mStringProperties.find(theName);
 	if (anItr != gSexyAppBase->mStringProperties.end())
 	{
 		return Sexy::WStringToSexyString(anItr->second);
 	}
 	else
 	{
+		printf("Missing %s\n", SexyStringToStringFast(theName).c_str());
 		return Sexy::StrFormat(__S("<Missing %s>"), theName.c_str());
 	}
 }
@@ -193,7 +193,7 @@ SexyString TodStringTranslate(const SexyChar* theString)
 {
 	if (theString != nullptr)
 	{
-		int aLen = strlen(theString);
+		int aLen = sexystrlen(theString);
 		if (aLen >= 3 && theString[0] == '[')
 		{
 			SexyString aName(theString, 1, aLen - 2);  // 取“[”与“]”中间的部分
@@ -203,7 +203,7 @@ SexyString TodStringTranslate(const SexyChar* theString)
 			return theString;
 	}
 	else
-		return "";
+		return __S("");
 }
 
 //0x5196C0
@@ -277,7 +277,8 @@ int TodWriteString(Graphics* g, const SexyString& theString, int theX, int theY,
 	{
 		if (theString[i] == '{')
 		{
-			const char* aFormatStart = theString.c_str() + i;
+			std::string String = SexyStringToStringFast(theString);
+			const char* aFormatStart = String.c_str() + i;
 			const char* aFormatEnd = strchr(aFormatStart + 1, '}');
 			if (aFormatEnd != nullptr)  // 如果存在完整的“{FORMAT}”控制字符
 			{
@@ -286,7 +287,7 @@ int TodWriteString(Graphics* g, const SexyString& theString, int theX, int theY,
 					aFont->DrawString(g, theX + aXOffset, theY, aString, theCurrentFormat.mNewColor, g->mClipRect);  // 将已经积攒的字符进行绘制
 				
 				aXOffset += aFont->StringWidth(aString);  // 横向偏移值加上绘制的字符串的宽度
-				aString.assign("");  // 清空字符串
+				aString.assign(__S(""));  // 清空字符串
 				TodWriteStringSetFormat(aFormatStart + 1, theCurrentFormat);  // 根据当前控制字符调整格式
 				// _Font* aFont = *theCurrentFormat.mNewFont; // unused
 			}
@@ -298,7 +299,7 @@ int TodWriteString(Graphics* g, const SexyString& theString, int theX, int theY,
 				if (CharIsSpaceInFormat(theString[i], theCurrentFormat))  // 如果当前字符是空格
 				{
 					if (!aPrevCharWasSpace)  // 如果前一个字符不是空格
-						aString.append(1, ' ');  // 积攒一个空格
+						aString.append(1, __S(' '));  // 积攒一个空格
 					continue;
 				}
 				else
@@ -352,7 +353,8 @@ int TodDrawStringWrappedHelper(Graphics* g, const SexyString& theText, const Rec
 		aCurChar = theText[aCurPos];
 		if (aCurChar == '{')  // 如果当前字符是特殊格式控制字符的起始标志（即“{”）
 		{
-			const char* aFmtStart = aCurPos + theText.c_str();
+			std::string CurString = SexyStringToString(theText);
+			const char* aFmtStart = CurString.c_str();
 			const char* aFormat = aFmtStart + 1;
 			const char* aFmtEnd = strchr(aFormat, '}');
 			if (aFmtEnd != nullptr)  // 如果存在与“{”对应的“}”，即存在完整的控制字符

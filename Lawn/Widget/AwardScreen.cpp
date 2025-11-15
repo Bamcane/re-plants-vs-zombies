@@ -141,7 +141,7 @@ AwardScreen::AwardScreen(LawnApp* theApp, AwardType theAwardType, bool theShowin
 	mContinueButton->mDisabled = true;
 
 	mMenuButton = new GameButton(AwardScreen::AwardScreen_Menu);
-	mMenuButton->SetLabel("[AWARD_MAIN_MENU_BUTTON]");
+	mMenuButton->SetLabel(__S("[AWARD_MAIN_MENU_BUTTON]"));
 	mMenuButton->mButtonImage = Sexy::IMAGE_SEEDCHOOSER_BUTTON2;
 	mMenuButton->mOverImage = Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW;
 	mMenuButton->mDownImage = nullptr;
@@ -159,7 +159,7 @@ AwardScreen::AwardScreen(LawnApp* theApp, AwardType theAwardType, bool theShowin
 
 	if (mAwardType == AWARD_CREDITS_ZOMBIENOTE)
 	{
-		mStartButton->SetLabel("[ROLL_CREDITS]");
+		mStartButton->SetLabel(__S("[ROLL_CREDITS]"));
 		mStartButton->mButtonImage = Sexy::IMAGE_CREDITS_PLAYBUTTON;
 		mStartButton->mOverImage = nullptr;
 		mStartButton->mDownImage = nullptr;
@@ -177,29 +177,29 @@ AwardScreen::AwardScreen(LawnApp* theApp, AwardType theAwardType, bool theShowin
 	}
 	else if (mAwardType == AWARD_HELP_ZOMBIENOTE)
 	{
-		mStartButton->SetLabel("[MAIN_MENU_BUTTON]");
+		mStartButton->SetLabel(__S("[MAIN_MENU_BUTTON]"));
 		mMenuButton->mBtnNoDraw = true;
 		mMenuButton->mDisabled = true;
 	}
 	else if (!mApp->IsAdventureMode())
 	{
-		mStartButton->SetLabel("[MAIN_MENU_BUTTON]");
+		mStartButton->SetLabel(__S("[MAIN_MENU_BUTTON]"));
 		mMenuButton->mBtnNoDraw = true;
 		mMenuButton->mDisabled = true;
 	}
 	else if (mApp->HasFinishedAdventure()) // @Patoke: change case
 	{
 		ReportAchievement::GiveAchievement(mApp, HomeSecurity, false); // @Patoke: add achievement
-		mStartButton->SetLabel("[CONTINUE_BUTTON]");
+		mStartButton->SetLabel(__S("[CONTINUE_BUTTON]"));
 		mMenuButton->mBtnNoDraw = true;
 		mMenuButton->mDisabled = true;
 	}
 	else if (aLevel == 15)
-		mStartButton->SetLabel("[VIEW_ALMANAC_BUTTON]");
+		mStartButton->SetLabel(__S("[VIEW_ALMANAC_BUTTON]"));
 	else if (aLevel == 25 || aLevel == 35 || aLevel == 45)
-		mStartButton->SetLabel("[CONTINUE_BUTTON]");
+		mStartButton->SetLabel(__S("[CONTINUE_BUTTON]"));
 	else
-		mStartButton->SetLabel("[NEXT_LEVEL_BUTTON]");
+		mStartButton->SetLabel(__S("[NEXT_LEVEL_BUTTON]"));
 
 	// @Patoke: implemented
 	if (mApp->IsAdventureMode() && mApp->EarnedGoldTrophy()) {
@@ -220,7 +220,7 @@ AwardScreen::AwardScreen(LawnApp* theApp, AwardType theAwardType, bool theShowin
 		mStartButton->mDisabled = true;
 		mMenuButton->mBtnNoDraw = true;
 		mMenuButton->mDisabled = true;
-		mContinueButton->SetLabel("[CONTINUE_BUTTON]");
+		mContinueButton->SetLabel(__S("[CONTINUE_BUTTON]"));
 	}
 
 	if (IsPaperNote())
@@ -313,7 +313,7 @@ void AwardScreen::Draw(Graphics* g)
 			}
 			else
 			{
-				const char* aMsgChar;
+				const SexyChar* aMsgChar;
 				if (mApp->IsSurvivalMode())
 				{
 					int aNumTrophies = mApp->GetNumTrophies(CHALLENGE_PAGE_SURVIVAL);
@@ -600,9 +600,9 @@ void AwardScreen::DrawAchievements(Graphics* g) {
 	TodDrawString(g, __S("ACHIEVEMENTS"), BOARD_WIDTH / 2, 58, FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
 
 	for (size_t i = 0; i < mAchievementItems.size(); i++) {
-		std::string aAchievementName = gAchievementList[mAchievementItems[i].mId].name;
-		std::string aAchievementDesc = gAchievementList[mAchievementItems[i].mId].description;
-		aAchievementName.append(" Earned!");
+		SexyString aAchievementName = gAchievementList[mAchievementItems[i].mId].name;
+		SexyString aAchievementDesc = gAchievementList[mAchievementItems[i].mId].description;
+		aAchievementName.append(__S(" Earned!"));
 
 		Rect aSrcRect = Rect(70 * (mAchievementItems[i].mId % 7), 70 * (mAchievementItems[i].mId / 7), 70, 70);
 		Rect aDestRect = Rect(70, 70, 70, 70);

@@ -50,7 +50,7 @@ void DrawStoneButton(Graphics* g, int x, int y, int theWidth, int theHeight, boo
 //0x447C60
 GameButton::GameButton(int theId)
 {
-	mLabel = "";
+	mLabel = __S("");
 	mNormalRect = mOverRect = mDownRect = mDisabledRect = Rect();
 	mOverAlpha = mOverAlphaSpeed = mOverAlphaFadeInSpeed = 0;
 	mApp = (LawnApp*)gSexyAppBase;
@@ -147,7 +147,7 @@ void GameButton::Draw(Graphics* g)
 			DrawButtonImage(g, mDisabledImage, mDisabledRect, 0, 0);
 		else if (mOverAlpha > 0.0f && HaveButtonImage(mOverImage, mOverRect))
 		{
-			if (HaveButtonImage(mButtonImage, mNormalRect) && mOverAlpha < 1.0f)  // Î´ÍêÈ«¹ý¶É½áÊø
+			if (HaveButtonImage(mButtonImage, mNormalRect) && mOverAlpha < 1.0f)  // Î´ï¿½ï¿½È«ï¿½ï¿½ï¿½É½ï¿½ï¿½ï¿½
 				DrawButtonImage(g, mButtonImage, mNormalRect, 0, 0);
 
 			g->SetColorizeImages(true);
@@ -161,7 +161,7 @@ void GameButton::Draw(Graphics* g)
 			DrawButtonImage(g, mButtonImage, mNormalRect, 0, 0);
 
 		g->SetColor(mColors[isHighLighted ? GameButton::COLOR_LABEL_HILITE : GameButton::COLOR_LABEL]);
-		g->DrawString(StringToSexyStringFast(mLabel), aFontX, aFontY);
+		g->DrawString(mLabel, aFontX, aFontY);
 
 		if (isHighLighted && mOverOverlayImage)
 		{
@@ -180,7 +180,7 @@ void GameButton::Draw(Graphics* g)
 			DrawButtonImage(g, mButtonImage, mNormalRect, 1, 1);
 		
 		g->SetColor(mColors[GameButton::COLOR_LABEL_HILITE]);
-		g->DrawString(StringToSexyStringFast(mLabel), aFontX + 1, aFontY + 1);
+		g->DrawString(mLabel, aFontX + 1, aFontY + 1);
 
 		if (isHighLighted && mOverOverlayImage)
 		{
@@ -344,7 +344,7 @@ void NewLawnButton::Draw(Graphics* g)
 			DrawButtonImage(g, mDisabledImage, mDisabledRect, mButtonOffsetX, mButtonOffsetY);
 		else if (mOverAlpha > 0.0f && HaveButtonImage(mOverImage, mOverRect))
 		{
-			if (HaveButtonImage(mButtonImage, mNormalRect) && mOverAlpha < 1.0f)  // Î´ÍêÈ«¹ý¶É½áÊø
+			if (HaveButtonImage(mButtonImage, mNormalRect) && mOverAlpha < 1.0f)  // Î´ï¿½ï¿½È«ï¿½ï¿½ï¿½É½ï¿½ï¿½ï¿½
 				DrawButtonImage(g, mButtonImage, mNormalRect, mButtonOffsetX, mButtonOffsetY);
 
 			g->mColor.mAlpha = mOverAlpha * 255;

@@ -10,7 +10,7 @@ DataReader::DataReader()
 	mOwnData = false;
 }
 
-//0x441B20¡¢0x441B80
+//0x441B20ï¿½ï¿½0x441B80
 DataReader::~DataReader()
 {
 	if (mFile)
@@ -135,7 +135,7 @@ void DataReader::ReadString(SexyString& theStr)
 {
 	unsigned int aStrLen = ReadShort();
 	theStr.resize(aStrLen);
-	ReadBytes((void*)theStr.c_str(), aStrLen);
+	ReadBytes((void*)theStr.c_str(), aStrLen * sizeof(SexyChar));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -499,7 +499,7 @@ DataWriter::DataWriter()
 	mCapacity = 0;
 }
 
-//0x4436A0¡¢0x4436F0
+//0x4436A0ï¿½ï¿½0x4436F0
 DataWriter::~DataWriter()
 {
 	if (mFile)
@@ -534,14 +534,14 @@ void DataWriter::EnsureCapacity(uint32_t theNumBytes)
 {
 	if (mCapacity < theNumBytes)
 	{
-		// Ã¿´Î½«ÈÝÁ¿³Ë 2 Ö±µ½ÈÝÁ¿´ïµ½ theNumBytes »ò¸ü¶à
+		// Ã¿ï¿½Î½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2 Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ïµ½ theNumBytes ï¿½ï¿½ï¿½ï¿½ï¿½
 		do { mCapacity <<= 1; } while (mCapacity < theNumBytes);
 
-		// ÉêÇëÐÂÄÚ´æ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½
 		char* aData = new char[mCapacity];
-		// ½«Ô­Êý¾ÝÇ¨ÒÆÖÁÐÂÄÚ´æÇøÓòÖÐ
+		// ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½Ç¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		memcpy(aData, mData, mDataLen);
-		// ÊÍ·Å¾ÉÓÐÄÚ´æÇøÓò
+		// ï¿½Í·Å¾ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½
 		delete[] mData;
 		mData = aData;
 	}
@@ -636,5 +636,5 @@ void DataWriter::WriteString(const SexyString& theStr)
 {
 	unsigned short aStrLen = (unsigned short)theStr.length();
 	WriteShort(aStrLen);
-	WriteBytes(theStr.c_str(), (uint32_t)aStrLen);
+	WriteBytes(theStr.c_str(), (uint32_t)aStrLen * sizeof(SexyChar));
 }

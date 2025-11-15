@@ -55,7 +55,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mAdventureButton = MakeNewButton(
 		GameSelector::GameSelector_Adventure, 
 		this, 
-		"", 
+		__S(""), 
 		nullptr, 
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON, 
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT, 
@@ -75,7 +75,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mMinigameButton = MakeNewButton(
 		GameSelector::GameSelector_Minigame, 
 		this, 
-		"", 
+		__S(""), 
 		nullptr, 
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_BUTTON, 
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT, 
@@ -94,7 +94,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mPuzzleButton = MakeNewButton(
 		GameSelector::GameSelector_Puzzle, 
 		this, 
-		"", 
+		__S(""), 
 		nullptr, 
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_BUTTON, 
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT, 
@@ -113,7 +113,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mSurvivalButton = MakeNewButton(
 		GameSelector::GameSelector_Survival,
 		this, 
-		"", 
+		__S(""), 
 		nullptr, 
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_BUTTON, 
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT, 
@@ -133,7 +133,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mZombatarButton = MakeNewButton(
 		GameSelector::GameSelector_Zombatar,
 		this,
-		"",
+		__S(""),
 		nullptr,
 		Sexy::IMAGE_BLANK,
 		Sexy::IMAGE_BLANK,
@@ -147,7 +147,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mAchievementsButton = MakeNewButton(
 		GameSelector::GameSelector_Achievements,
 		this,
-		"",
+		__S(""),
 		nullptr,
 		Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL,
 		Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL_PRESS,
@@ -161,7 +161,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mQuickPlayButton = MakeNewButton(
 		GameSelector::GameSelector_QuickPlay,
 		this,
-		"",
+		__S(""),
 		nullptr,
 		Sexy::IMAGE_QUICKPLAY_BACK_BUTTON,
 		Sexy::IMAGE_QUICKPLAY_BACK_BUTTON_HIGHLIGHT,
@@ -172,7 +172,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mZenGardenButton = MakeNewButton(
 		GameSelector::GameSelector_ZenGarden, 
 		this, 
-		"", 
+		__S(""), 
 		nullptr, 
 		Sexy::IMAGE_SELECTORSCREEN_ZENGARDEN, 
 		Sexy::IMAGE_SELECTORSCREEN_ZENGARDENHIGHLIGHT, 
@@ -185,7 +185,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mOptionsButton = MakeNewButton(
 		GameSelector::GameSelector_Options, 
 		this, 
-		"", 
+		__S(""), 
 		nullptr, 
 		Sexy::IMAGE_SELECTORSCREEN_OPTIONS1, 
 		Sexy::IMAGE_SELECTORSCREEN_OPTIONS2, 
@@ -200,7 +200,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mHelpButton = MakeNewButton(
 		GameSelector::GameSelector_Help, 
 		this, 
-		"", 
+		__S(""), 
 		nullptr, 
 		Sexy::IMAGE_SELECTORSCREEN_HELP1, 
 		Sexy::IMAGE_SELECTORSCREEN_HELP2, 
@@ -215,7 +215,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mQuitButton = MakeNewButton(
 		GameSelector::GameSelector_Quit, 
 		this, 
-		"", 
+		__S(""), 
 		nullptr, 
 		Sexy::IMAGE_SELECTORSCREEN_QUIT1, 
 		Sexy::IMAGE_SELECTORSCREEN_QUIT2, 
@@ -231,7 +231,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mChangeUserButton = MakeNewButton(
 		GameSelector::GameSelector_ChangeUser, 
 		this, 
-		"", 
+		__S(""), 
 		nullptr, 
 		Sexy::IMAGE_BLANK, 
 		Sexy::IMAGE_BLANK, 
@@ -247,7 +247,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mStoreButton = MakeNewButton(
 		GameSelector::GameSelector_Store, 
 		this, 
-		"", 
+		__S(""), 
 		nullptr, 
 		Sexy::IMAGE_SELECTORSCREEN_STORE, 
 		Sexy::IMAGE_SELECTORSCREEN_STOREHIGHLIGHT, 
@@ -260,7 +260,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mAlmanacButton = MakeNewButton(
 		GameSelector::GameSelector_Almanac, 
 		this, 
-		"", 
+		__S(""), 
 		nullptr, 
 		Sexy::IMAGE_SELECTORSCREEN_ALMANAC, 
 		Sexy::IMAGE_SELECTORSCREEN_ALMANACHIGHLIGHT, 
@@ -1167,7 +1167,7 @@ void GameSelector::KeyChar(char theChar)
 
 	if ((gIsPartnerBuild || mApp->mDebugKeysEnabled) && theChar == 'u' && mApp->mPlayerInfo)
 	{
-		TodTraceAndLog(__S("Selector cheat key '%c'"), theChar);
+		TodTraceAndLog("Selector cheat key '%c'", theChar);
 
 		mApp->mPlayerInfo->mFinishedAdventure = 2;
 		mApp->mPlayerInfo->AddCoins(50000);
@@ -1187,7 +1187,7 @@ void GameSelector::KeyChar(char theChar)
 
 	if (mApp->mDebugKeysEnabled)
 	{
-		TodTraceAndLog(__S("Selector cheat key '%c'"), theChar);
+		TodTraceAndLog("Selector cheat key '%c'", theChar);
 		if (theChar == 'c' || theChar == 'C')
 		{
 			mMinigamesLocked = false;

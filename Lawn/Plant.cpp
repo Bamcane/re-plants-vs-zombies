@@ -5113,13 +5113,13 @@ SexyString Plant::GetNameString(SeedType theSeedType, SeedType theImitaterType)
 {
     const PlantDefinition& aPlantDef = GetPlantDefinition(theSeedType);
     SexyString aName = StrFormat(__S("[%s]"), aPlantDef.mPlantName);
-    SexyString aTranslatedName = TodStringTranslate(StringToSexyStringFast(aName));
+    SexyString aTranslatedName = TodStringTranslate(aName);
 
     if (theSeedType == SeedType::SEED_IMITATER && theImitaterType != SeedType::SEED_NONE)
     {
         const PlantDefinition& aImitaterDef = GetPlantDefinition(theImitaterType);
-        std::string aImitaterName = StrFormat(__S("[%s]"), aImitaterDef.mPlantName);
-        std::string aTranslatedImitaterName = TodStringTranslate(StringToSexyStringFast(aImitaterName));
+        SexyString aImitaterName = StrFormat(__S("[%s]"), aImitaterDef.mPlantName);
+        SexyString aTranslatedImitaterName = TodStringTranslate(aImitaterName);
         return StrFormat(__S("%s %s"), aTranslatedName.c_str(), aTranslatedImitaterName.c_str());
     }
 
