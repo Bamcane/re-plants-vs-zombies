@@ -108,9 +108,15 @@ inline int sexywtoi(const wchar_t* str)
     return static_cast<int>(val);
 }
 
+#ifdef _WIN32
+#define wstrcasecmp _wcsicmp
+#else
+#define wstrcasecmp wcscasecmp
+#endif
+
 #define sexystrncmp			wcsncmp
 #define sexystrcmp			wcscmp
-#define sexystricmp			wcscasecmp
+#define sexystricmp			wstrcasecmp
 #define sexysscanf			swscanf
 #define sexyatoi			sexywtoi
 #define sexystrcpy			wcscpy
@@ -272,7 +278,7 @@ inline void			inlineTrim(std::string &theData, const std::string& theChars = " \
 }
 
 struct StringLessNoCase { 
-	bool operator()(const std::wstring &s1, const std::wstring &s2) const { return wcscasecmp(s1.c_str(),s2.c_str())<0; } 
+	bool operator()(const std::wstring &s1, const std::wstring &s2) const { return wstrcasecmp(s1.c_str(),s2.c_str())<0; } 
 	bool operator()(const std::string &s1, const std::string &s2) const { return strcasecmp(s1.c_str(),s2.c_str())<0; }
 };
 
