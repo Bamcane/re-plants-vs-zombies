@@ -1,0 +1,56 @@
+<Properties>  
+
+ <!-- Game AD basic information -->
+  <String id="GameID">001</String>
+  <String id="GameTitle">PVZ</String>
+  <String id="ChannelInfo">VERYCD</String>
+  <String id="LogServerName">Kontagent</String>
+ 
+ <!-- AD data in loading menu -->
+  <Integer id="GgPositionID">1</Integer>
+  <Integer id="TitleScreenX">57</Integer>
+  <Integer id="TitleScreenY">11</Integer>
+  <Integer id="TitleScreenWidth">360</Integer>
+  <Integer id="TitleScreenHeight">320</Integer>
+  <String id="TitleScreenURL">http://jump.gamegg.popcap.com.cn/Popcap_GG_Web_Loading.htm</String>
+  <Double id="TitleScreenLoadingTime">17.0</Double>
+  <Boolean id="TitleScreenActivated">true</Boolean>
+  <Double id="TitleScreenAllowedLoadingTime">6.0</Double>  
+
+  <!-- Frame data in loading menu -->
+  <Integer id="GgPositionID">1</Integer>
+  <Integer id="TitleScreenFrameX">136</Integer>
+  <Integer id="TitleScreenFrameY">166</Integer>
+  <Integer id="TitleScreenFrameWidth">490</Integer>
+  <Integer id="TitleScreenFrameHeight">362</Integer>
+  
+  <!-- Up AD data at the end of game level -->
+  <Integer id="GgPositionID">2</Integer>  
+  <Integer id="GameEndUpX">0</Integer>
+  <Integer id="GameEndUpY">0</Integer>
+  <Integer id="GameEndUpWidth">800</Integer>
+  <Integer id="GameEndUpHeight">300</Integer>
+  <String id="GameEndUpURL">http://jump.gamegg.popcap.com.cn/Popcap_GG_Web_Game_End.htm</String>
+  <Double id="GameEndUpInterval">600.0</Double>
+  <Boolean id="GameEndUpActivated">true</Boolean>  
+  
+  <!-- Up frame data at the end of game level -->
+  <Integer id="GgPositionID">2</Integer>  
+  <Integer id="GameEndUpFrameX">0</Integer>
+  <Integer id="GameEndUpFrameY">-300</Integer>
+  <Integer id="GameEndUpFrameWidth">800</Integer>
+  <Integer id="GameEndUpFrameHeight">300</Integer>  
+  
+  <!-- Close button data -->
+  <Integer id="GgPositionID">2</Integer>  
+  <Integer id="ButtonX">720</Integer>
+  <Integer id="ButtonY">270</Integer>
+  <Integer id="ButtonWidth">60</Integer>
+  <Integer id="ButtonHeight">20</Integer>
+  
+  <!-- Log server data -->
+  <String id="BeginURL">http://api.geo.kontagent.net/api/v1/</String>
+  <String id="APIKey">1b0fe3f2526b429ab49b0f662c1a110d</String>
+  <String id="Channel">VERYCD</String>
+  
+</Properties>

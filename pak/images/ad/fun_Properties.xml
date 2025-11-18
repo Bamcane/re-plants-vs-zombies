@@ -1,0 +1,39 @@
+<Properties >
+  <String id="Fun_NAMES">2010726_02,2010726_03,2010726_04,2010726_05,2010726_06,2010726_07,2010726_08,2010726_09,2010726_10,2010726_11</String>
+
+  <String id="Fun_IMAGE_2010726_02">02.png</String>
+  <Integer id="Fun_IMAGE_SIZE_2010726_02">22607</Integer>
+  
+   <String id="Fun_IMAGE_2010726_03">03.png</String>
+  <Integer id="Fun_IMAGE_SIZE_2010726_03">22692</Integer>   
+  
+  <String id="Fun_IMAGE_2010726_04">04.png</String>
+  <Integer id="Fun_IMAGE_SIZE_2010726_04">22175</Integer>
+  
+  
+  <String id="Fun_IMAGE_2010726_05">05.png</String>
+  <Integer id="Fun_IMAGE_SIZE_2010726_05">5178</Integer>
+  
+  
+  <String id="Fun_IMAGE_2010726_06">06.png</String>
+  <Integer id="Fun_IMAGE_SIZE_2010726_06">24190</Integer>
+  
+  
+  <String id="Fun_IMAGE_2010726_07">07.png</String>
+  <Integer id="Fun_IMAGE_SIZE_2010726_07">25216</Integer>
+  
+  
+  <String id="Fun_IMAGE_2010726_08">08.png</String>
+  <Integer id="Fun_IMAGE_SIZE_2010726_08">28826</Integer>
+  
+  
+  <String id="Fun_IMAGE_2010726_09">09.png</String>
+  <Integer id="Fun_IMAGE_SIZE_2010726_09">21811</Integer>
+  
+  
+  <String id="Fun_IMAGE_2010726_10">10.png</String>
+  <Integer id="Fun_IMAGE_SIZE_2010726_10">22677</Integer>
+  
+   <String id="Fun_IMAGE_2010726_11">11.png</String>
+  <Integer id="Fun_IMAGE_SIZE_2010726_11">22100</Integer>
+</Properties>

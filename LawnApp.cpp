@@ -45,7 +45,6 @@
 
 #include "widget/Checkbox.h"
 #include "widget/Dialog.h"
-#include "SexyAppFramework/resource.h"
 
 bool gIsPartnerBuild = false; // GOTY @Patoke: 0x729659
 bool gSlowMo = false;  //0x6A9EAA

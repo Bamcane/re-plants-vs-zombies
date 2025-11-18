@@ -20,6 +20,23 @@ file(GLOB SOURCES
 	SexyAppFramework/LawnProject.rc
 )
 
+set(CXX_STANDARD 17)
+set(CXX_STANDARD_REQUIRED ON)
+
+set(OWN_CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/CMake)
+set(CMAKE_MODULE_PATH ${OWN_CMAKE_MODULE_PATH})
+
+option(DEV "Don't generate stuff necessary for packaging" OFF)
+
+# Set the default build type to Release
+if(NOT(CMAKE_BUILD_TYPE))
+  if(NOT(DEV))
+    set(CMAKE_BUILD_TYPE Release)
+  else()
+    set(CMAKE_BUILD_TYPE Debug)
+  endif()
+endif()
+
 # these files are included and must not be built in the project
 list(REMOVE_ITEM SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/Sexy.TodLib/TodDrawTriangle.cpp
@@ -76,18 +93,20 @@ find_package(SDL2 REQUIRED)
 if (NOT NO_GLEW)
 	find_package(GLEW REQUIRED)
 endif()
+find_package(ZSTD REQUIRED)
 
 set(SDL_MIXER_X_STATIC ON CACHE BOOL "Build static library of SDL Mixer X" FORCE)
 set(SDL_MIXER_X_SHARED OFF CACHE BOOL "Build shared library of SDL Mixer X" FORCE)
 set(USE_MIDI OFF CACHE BOOL "SDL Mixer X midi" FORCE)
 set(USE_MODPLUG OFF CACHE BOOL "SDL Mixer X modplug" FORCE)
 set(USE_XMP OFF CACHE BOOL "SDL Mixer X xmp" FORCE)
-set(USE_OPUS OFF CACHE BOOL "SDL Mixer X opus" FORCE)
+set(USE_OPUS ON CACHE BOOL "SDL Mixer X opus" FORCE)
 set(USE_DRFLAC OFF CACHE BOOL "SDL Mixer X flac" FORCE)
 set(USE_PXTONE OFF CACHE BOOL "SDL Mixer X pxtone" FORCE)
 add_subdirectory(SexyAppFramework/sound/SDL-Mixer-X)
+add_subdirectory(external/libwebp)
 
-add_executable(re-plants-vs-zombies ${SOURCES})
+add_executable(re-plants-vs-zombies ${SOURCES} ${DEP_ZSTD})
 target_include_directories(re-plants-vs-zombies PRIVATE
 	${PROJECT_SOURCE_DIR}/SexyAppFramework
 	${PROJECT_SOURCE_DIR}/SexyAppFramework/sound/SDL-Mixer-X/include
@@ -101,7 +120,7 @@ if (LOW_MEMORY)
 endif()
 target_compile_definitions(re-plants-vs-zombies PRIVATE IMG_DOWNSCALE=${DOWNSCALE_COUNT})
 
-target_link_libraries(re-plants-vs-zombies jpeg png z SDL2_mixer_ext_Static openmpt mpg123 ${VORBIS_LIBS} ogg ${SDL2_LIBRARIES} ${GLEW_LIBRARIES})
+target_link_libraries(re-plants-vs-zombies jpeg png z SDL2_mixer_ext_Static openmpt mpg123 webpdecoder ${ZSTD_LIBRARIES} ${VORBIS_LIBS} ogg ${SDL2_LIBRARIES} ${GLEW_LIBRARIES})
 
 if (WIN32)
 	target_link_options(re-plants-vs-zombies PRIVATE -static -static-libgcc -static-libstdc++)
@@ -111,33 +130,42 @@ if (WIN32)
 	if(NOT CONSOLE)
 		target_link_options(re-plants-vs-zombies PRIVATE -mwindows)
 	endif()
-elseif (NINTENDO_SWITCH)
-	target_link_libraries(re-plants-vs-zombies glad EGL glapi drm_nouveau)
-
-	nx_generate_nacp(re-plants-vs-zombies.nacp
-		NAME "Plants vs. Zombies"
-		AUTHOR "PopCap Games, Unofficial Switch port by Headshotnoby"
-		VERSION "0.1"
-	)
-
-	nx_create_nro(re-plants-vs-zombies
-		NACP re-plants-vs-zombies.nacp
-		ICON ${CMAKE_CURRENT_SOURCE_DIR}/icon-switch.jpg
-	)
-elseif (NINTENDO_3DS)
-	target_link_libraries(re-plants-vs-zombies citro3d shaders)
-
-	ctr_generate_smdh(re-plants-vs-zombies.smdh
-		NAME "Plants vs. Zombies"
-		DESCRIPTION "GOTY Edition"
-		AUTHOR "PopCap Games, Unofficial 3DS port by Headshotnoby"
-		VERSION "0.1"
-		ICON "${CMAKE_CURRENT_SOURCE_DIR}/icon-3ds.png"
-	)
-
-	ctr_create_3dsx(re-plants-vs-zombies
-		SMDH re-plants-vs-zombies.smdh
-	)
+#
+#elseif (NINTENDO_SWITCH)
+#	target_link_libraries(re-plants-vs-zombies glad EGL glapi drm_nouveau)
+#
+#	nx_generate_nacp(re-plants-vs-zombies.nacp
+#		NAME "Plants vs. Zombies"
+#		AUTHOR "PopCap Games, Unofficial Switch port by Headshotnoby"
+#		VERSION "0.1"
+#	)
+#
+#	nx_create_nro(re-plants-vs-zombies
+#		NACP re-plants-vs-zombies.nacp
+#		ICON ${CMAKE_CURRENT_SOURCE_DIR}/icon-switch.jpg
+#	)
+#elseif (NINTENDO_3DS)
+#	target_link_libraries(re-plants-vs-zombies citro3d shaders)
+#
+#	ctr_generate_smdh(re-plants-vs-zombies.smdh
+#		NAME "Plants vs. Zombies"
+#		DESCRIPTION "GOTY Edition"
+#		AUTHOR "PopCap Games, Unofficial 3DS port by Headshotnoby"
+#		VERSION "0.1"
+#		ICON "${CMAKE_CURRENT_SOURCE_DIR}/icon-3ds.png"
+#	)
+#
+#	ctr_create_3dsx(re-plants-vs-zombies
+#		SMDH re-plants-vs-zombies.smdh
+#	)
 else()
 	target_link_libraries(re-plants-vs-zombies GL)
 endif()
+
+
+### tools
+add_executable(pak_pack tools/pak_pack.cpp ${DEP_ZSTD})
+add_executable(pak_unpack tools/pak_unpack.cpp ${DEP_ZSTD})
+
+target_link_libraries(pak_pack ${ZSTD_LIBRARIES})
+target_link_libraries(pak_unpack ${ZSTD_LIBRARIES})

@@ -239,8 +239,8 @@ bool SDLSoundManager::LoadSound(unsigned int theSfxID, const std::string& theFil
 		return true;
 
 	mSourceFileNames[theSfxID] = theFilename;
-	const char* formats[] = {".wav", ".mp3", ".ogg"};
-	for (int i=0; i<3; i++)
+	const char* formats[] = {".wav", ".mp3", ".ogg", ".opus"};
+	for (int i=0; i<4; i++)
 	{
 		std::string aFilename = theFilename + formats[i];
 

@@ -155,13 +155,13 @@ void Music::LoadSong(MusicFile theMusicFile, const std::string& theFileName)
 	TodHesitationTrace("preloadsong");
 	if (!TodLoadMusic(theMusicFile, theFileName))
 	{
-		TodTrace("music failed to load\n");
-		mMusicDisabled = true;
+		TodTrace("music %s failed to load\n", theFileName.c_str());
+		// mMusicDisabled = true;
 	}
 	else
 	{
 		//gBass->BASS_ChannelSetAttribute(GetBassMusicHandle(theMusicFile), BASS_ATTRIB_MUSIC_PSCALER, 4);  // 设置音乐定位精确度属性
-		TodHesitationTrace("song '%s'", theFileName.c_str());
+		printf("song '%s'\n", theFileName.c_str());
 	}
 }
 
@@ -185,7 +185,7 @@ void Music::MusicInit()
 	mApp->mCompletedLoadingThreadTasks += /*原版*/3500;///*内测版*/800;
 
 #ifdef _DEBUG
-	LoadSong(MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN, "sounds/ZombiesOnYourLawn.ogg");
+	LoadSong(MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN, "sounds/ZombiesOnYourLawn.opus");
 	mApp->mCompletedLoadingThreadTasks += /*原版*/3500;///*内测版*/800;
 	if (mApp->mCompletedLoadingThreadTasks != aNumLoadingTasks)
 		TodTrace("Didn't calculate loading task count correctly!!!!");
@@ -198,7 +198,7 @@ void Music::MusicCreditScreenInit()
 #ifndef _DEBUG
 	SDLMusicInterface* anSDL = (SDLMusicInterface*)mApp->mMusicInterface;
 	if (anSDL->mMusicMap.find((int)MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN) == anSDL->mMusicMap.end())  // 如果尚未加载
-		LoadSong(MusicFile::MUSIC_FILE_MAIN_MUSIC, "sounds/ZombiesOnYourLawn.ogg");
+		LoadSong(MusicFile::MUSIC_FILE_MAIN_MUSIC, "sounds/ZombiesOnYourLawn.opus");
 #endif
 }
 

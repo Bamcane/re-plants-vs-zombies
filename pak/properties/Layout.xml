@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<Properties country="US" language="en" lookandfeel="NORMAL" version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="">
+	<Double id="OPTION_DLG_LABEL_FONT_SCALE">1.0</Double>
+	<Integer id="OPTION_DLG_SLIDER_LABELS_OFFSET_X">186</Integer>
+	<Integer id="OPTION_DLG_CHECKBOX_LABELS_OFFSET_X">274</Integer>
+                <Integer id="CHALLENGE_SCREEN_BUTTON_AUTO_WRAP_NUM">8</Integer>
+                 <Integer id="SEED_CHOOSER_SCREEN_TOOL_TIP_MAX_LINE_WIDTH">150</Integer>
+                <Integer id="TREE_OF_WISDOM_TEXT_WRAP_ENUM">5</Integer>
+                <Integer id="CRAZY_DAVE_MESSAGE_TEXT_WRAP_ENUM">5</Integer>
+
+	<Boolean id="STORE_USE_COMING_SOON_IMAGE_LABEL">false</Boolean>
+	<Boolean id="STORE_USE_SOLD_OUT_IMAGE_LABEL">false</Boolean>
+	<Boolean id="STORE_USE_EXTRA_SLOT_IMAGE_LABEL">false</Boolean>
+</Properties>

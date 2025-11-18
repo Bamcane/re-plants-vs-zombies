@@ -422,3 +422,8 @@ tools/read-compiled/target
 *.sublime-workspace
 
 build-*/
+
+/compiled
+/savedata
+/pak_pack
+/pak_unpack

@@ -12,6 +12,8 @@ extern "C"
 #include "jerror.h"
 }
 
+#include "webp/decode.h"
+
 using namespace ImageLib;
 
 Image::Image()
@@ -150,6 +152,54 @@ Image* GetPNGImage(const std::string& theFileName)
 	anImage->mBits = aBits;
 
 	return anImage;
+}
+
+Image* GetWEBPImage(const std::string& theFileName)
+{
+    PFILE* fp = p_fopen(theFileName.c_str(), "rb");
+    if (!fp)
+        return nullptr;
+
+    // 获取文件大小
+    p_fseek(fp, 0, SEEK_END);
+    long fileSize = p_ftell(fp);
+    p_fseek(fp, 0, SEEK_SET);
+
+    if (fileSize <= 0) {
+        p_fclose(fp);
+        return nullptr;
+    }
+
+    // 读取整个文件到内存
+    unsigned char* fileData = new unsigned char[fileSize];
+    size_t bytesRead = p_fread(fileData, 1, fileSize, fp);
+    p_fclose(fp);
+
+    if (static_cast<long>(bytesRead) != fileSize) {
+        delete[] fileData;
+        return nullptr;
+    }
+
+    // 加载 WebP
+	int width, height;
+    uint8_t *pData;
+    if (!(pData = WebPDecodeBGRA(fileData, fileSize, &width, &height)))
+	{
+        return nullptr;
+    }
+
+    // 分配 RGBA 输出缓冲区（uint32_t 数组）
+    uint32_t* bits = new uint32_t[width * height];
+	memcpy(bits, pData, width * height * 4);
+    Image* NewImage = new Image();
+    NewImage->mWidth = width;
+    NewImage->mHeight = height;
+    NewImage->mBits = bits;
+    WebPFree(pData);
+
+	delete[] fileData;
+
+    return NewImage;
 }
 
 Image* GetTGAImage(const std::string& theFileName)
@@ -1324,6 +1374,9 @@ Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage
 	if ((anImage == NULL) && ((strcasecmp(anExt.c_str(), ".gif") == 0) || (anExt.length() == 0)))
 		anImage = GetGIFImage(aFilename + ".gif");
 
+	if ((anImage == NULL) && ((strcasecmp(anExt.c_str(), ".webp") == 0) || (anExt.length() == 0)))
+		anImage = GetWEBPImage(aFilename + ".webp");
+	
 	if ((anImage == NULL) && (strcasecmp(anExt.c_str(), ".j2k") == 0))
 		unreachable(); // There are no JPEG2000 files in the project
 		//anImage = GetJPEG2000Image(aFilename + ".j2k");

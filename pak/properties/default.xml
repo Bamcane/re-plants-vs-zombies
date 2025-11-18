@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Properties version="1.0" language="en" country="US" lookandfeel="NORMAL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="">
+<String id="LOCALE">Chinese_China</String>
+<String id="PROPERTIES_URL">http://labs-apac.popcap.com/goty/</String>
+
+<!-- Framework Strings -->
+<String id="DIALOG_BUTTON_YES">是</String>
+<String id="DIALOG_BUTTON_NO">否</String>
+<String id="DIALOG_BUTTON_OK">确认</String>
+<String id="DIALOG_BUTTON_CANCEL">取消</String>
+
+<String id="UNEXPECTED_ERROR">出现了一个意外错误！点击“发送报告”，可以向我们发送出错信息。这样能帮助我们解决这一问题。&cr;&cr;你还可以通过feedback@popcap.com直接联系我们。</String>
+
+<String id="PLEASE_HELP">请尽量详细地向我们提供关于这一问题的信息。这是你第一次遇到这种错误吗？以前你是否顺利地使用过其它完整版的宝开游戏？最近你是否升级过你的电脑驱动或者任何软件，可能与本游戏程序发生冲突？</String>
+
+<String id="FAILED_CONNECT_POPCAP">无法联系宝开服务器。请查看你的网络连接。&cr;如果你使用的是拨号上网方式，请联系你的ISP服务商。</String>
+
+<String id="HARDWARE_ACCEL_SWITCHED_ON">已开启3D加速&cr;如果这样做导致游戏运行速度缓慢或者其它显示问题，&cr;请关闭3D加速。&cr;&cr;你想要继续开启3D加速吗？</String>
+
+<String id="HARDWARE_ACCEL_CONFIRMATION">3D加速确认</String>
+
+<String id="HARDWARE_ACCEL_NOT_WORKING">3D加速也许无法正常运行。&cr;如果你发现游戏显示出现问题，也许你应该关闭3D加速。&cr;你想要继续开启3D加速吗？</String>
+
+<String id="FATAL_ERROR">致命错误</String>
+
+<String id="PLEASE_SET_COLOR_DEPTH">请将你的桌面显示设置为16位色。</String>
+
+<String id="FAILED_INIT_DIRECTDRAW">无法初始化DirectDraw：&nbsp;</String>
+
+<String id="UNABLE_OPEN_PROPERTIES">无法开启道具文件&nbsp;</String>
+
+<String id="PROPERTIES_SIG_FAILED">&nbsp;上的信号检测失败</String>
+
+<String id="INVALID_COMMANDLINE_PARAM">无效命令行参数：</String> 
+
+<String id="APP_REQUIRES_DIRECTX">这一程序需要DirectX才能运行。您可以在http://www.microsoft.com/directx中获取DirectX</String>
+<String id="YOU_NEED_DIRECTX">你需要DirectX</String>
+
+<String id="Home Lawn Security">庭院无忧</String>
+<String id="Complete Adventure Mode.">完成冒险模式。</String>
+<String id="Nobel Peas Prize">葵花宝典</String> 
+<String id="Get the golden sunflower trophy.">获得黄金向日葵奖杯。</String>
+<String id="Better Off Dead">头脑风暴</String>
+<String id="Get to a streak of 10 in I, Zombie Endless">在僵尸公敌无限模式中，突破第十关。</String>
+<String id="China Shop">瓷器太厚</String>
+<String id="Get to a streak of 15 in Vasebreaker Endless">在花瓶终结者无限模式中，突破第十五关。</String>
+<String id="SPUDOW!">土豆泥</String>
+<String id="Blow up a zombie using a Potato Mine.">成功用土豆地雷炸飞一个僵尸。</String>
+<String id="Explodonator">火爆兄弟</String>
+<String id="Take out 10 full-sized zombies with a single Cherry Bomb.">成功用一个樱桃炸弹同时炸死十个正常体型的僵尸。</String>
+<String id="Morticulturalist">植物猎人</String>
+<String id="Collect all 49 plants (including plants from Crazy Dave's shop).">收集所有49个植物（包括商店中出售的植物）。</String>
+<String id="Don't Pea in the Pool">豌豆先生的假期</String> 
+<String id="Complete a daytime pool level without using pea shooters of any kind.">不使用任何一个类型的豌豆射手，完成一个白天泳池关卡。</String>
+<String id="Roll Some Heads">五颗星</String>
+<String id="Bowl over 5 zombies with a single Wall-Nut.">用一个坚果撞倒5个僵尸。</String>
+<String id="Grounded">空中管制</String> 
+<String id="Defeat a normal roof level without using any catapult plants.">不使用任何一种投手植物，完成一个普通屋顶关卡。</String>
+<String id="Zombologist">僵尸学家</String> 
+<String id="Discover the Yeti zombie.">发现雪人僵尸。</String>
+<String id="Penny Pincher">铁公鸡</String> 
+<String id="Pick up 30 coins in a row on a single level without letting any disappear.">在单一关卡内，连续捡取30枚金币，过程中不能因有金币消失而中断。</String>
+<String id="Sunny Days">阳光满屋</String>
+<String id="Get 8000 sun during a single level.">在单一关卡内，收集8000太阳能量。</String>
+<String id="Popcorn Party">爆米花派对</String>
+<String id="Defeat 2 Gargantuars with Corn Cob missiles in a single level.">在单一关卡内，使用玉米炮弹消灭两只巨人僵尸。</String>
+<String id="Good Morning">全日无休</String>
+<String id="Complete a daytime level by planting only Mushrooms and Coffee Beans.">只使用蘑菇和咖啡豆，完成一个白天关卡。</String>
+<String id="No Fungus Among Us">无菇之夜</String> 
+<String id="Complete a nighttime level without planting any Mushrooms.">不使用任何蘑菇，完成一个夜晚关卡。</String>
+<String id="Beyond the Grave">狂热死忠</String>
+<String id="Beat all 20 mini games.">完成所有20个迷你游戏。</String>
+<String id="Immortal">无懈可击</String> 
+<String id="Survive 20 waves of pure zombie ferocity.">成功抵抗20波凶猛来袭的僵尸。</String>
+<String id="Towering Wisdom">天天向上</String> 
+<String id="Grow the Tree of Wisdom to 100 feet.">将智慧树培育至100英尺。</String>
+<String id="Mustache Mode">大胡子模式</String>
+<String id="Enable Mustache Mode">开启大胡子模式。</String>
+<String id="%s Achievement!">%s 成就达成！</String>
+<String id="%s Earned!">%s 成就达成！</String>
+<String id="ACHIEVEMENTS">成就</String>
+<String id="Delete?">删除?</String>
+</Properties>
+

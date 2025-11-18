@@ -10,6 +10,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - uses: msys2/setup-msys2@v2
         with:
@@ -28,12 +30,15 @@ jobs:
             libogg:p
             libjpeg-turbo:p
             libpng:p
+            opus:p
+            opusfile:p
 
       - name: Compile
         run: |
           cmake -G Ninja -B build
           cmake --build build
-          cp /mingw32/bin/SDL2.dll /mingw32/bin/glew32.dll build/
+          cp /mingw32/bin/SDL2.dll /mingw32/bin/glew32.dll /mingw32/bin/libopusfile.dll /mingw32/bin/libopus.dll /mingw32/bin/libogg.dll build/
+          cp ./main.pak.zst build/
 
       - name: Upload .exe artifact
         uses: actions/upload-artifact@v4

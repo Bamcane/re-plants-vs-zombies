@@ -1,0 +1,18 @@
+<Properties >
+  <String id="AD_NAMES_PASS">banner1,banner2,banner3</String>
+
+  <String id="AD_IMAGE_banner1">banner1.webp</String>
+  <String id="AD_IMAGE_LINK_URL_banner1">http://labs-apac.popcap.com/bj2/kontagent_pvz/kn_pvz_event.php?event=Goto_20100730_Pass_banner1&url=http://page.renren.com/zhiwudazhanjiangshi</String>
+  <Integer id="AD_IMAGE_SIZE_banner1">46757</Integer>
+
+
+  <String id="AD_IMAGE_banner2">banner2.webp</String>
+  <String id="AD_IMAGE_LINK_URL_banner2">http://labs-apac.popcap.com/bj2/kontagent_pvz/kn_pvz_event.php?event=Goto_20100730_Pass_banner2&url=http://page.renren.com/zhiwudazhanjiangshi</String>
+  <Integer id="AD_IMAGE_SIZE_banner2">62544</Integer>
+
+  
+  <String id="AD_IMAGE_banner3">banner3.webp</String>
+  <String id="AD_IMAGE_LINK_URL_banner3">http://labs-apac.popcap.com/bj2/kontagent_pvz/kn_pvz_event.php?event=Goto_20100730_Pass_banner3&url=http://page.renren.com/zhiwudazhanjiangshi</String>
+  <Integer id="AD_IMAGE_SIZE_banner3">56611</Integer>
+
+</Properties>

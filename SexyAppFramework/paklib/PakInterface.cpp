@@ -2,32 +2,30 @@
 #include "Common.h"
 #include "PakInterface.h"
 #include "fcaseopen/fcaseopen.h"
+#include <zstd.h>
 
 typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned long ulong;
 
-enum
-{
-	FILEFLAGS_END = 0x80
+enum {
+    FILEFLAGS_END = 0x80
 };
 
 PakInterface* gPakInterface = new PakInterface();
 
 static std::string StringToUpper(const std::string& theString)
 {
-	std::string aString;
-
-	for (unsigned i = 0; i < theString.length(); i++)
-		aString += toupper(theString[i]);
-
-	return aString;
+    std::string aString;
+    for (unsigned i = 0; i < theString.length(); i++)
+        aString += toupper(theString[i]);
+    return aString;
 }
 
 PakInterface::PakInterface()
 {
-	//if (GetPakPtr() == NULL)
-		//*gPakInterfaceP = this;
+    //if (GetPakPtr() == NULL)
+    //*gPakInterfaceP = this;
 }
 
 PakInterface::~PakInterface()
@@ -37,52 +35,50 @@ PakInterface::~PakInterface()
 //0x5D84D0
 static void FixFileName(const char* theFileName, char* theUpperName)
 {
-	// 检测路径是否为从盘符开始的绝对路径
-	if ((theFileName[0] != 0) && (theFileName[1] == ':'))
-	{
-		char aDir[256];
-		getcwd(aDir, 256);  // 取得当前工作路径
-		int aLen = strlen(aDir);
-		aDir[aLen++] = '/';
-		aDir[aLen] = 0;
+    // 检测路径是否为从盘符开始的绝对路径
+    if ((theFileName[0] != 0) && (theFileName[1] == ':'))
+    {
+        char aDir[256];
+        getcwd(aDir, 256); // 取得当前工作路径
+        int aLen = strlen(aDir);
+        aDir[aLen++] = '/';
+        aDir[aLen] = 0;
 
-		// 判断 theFileName 文件是否位于当前目录下
-		if (strncasecmp(aDir, theFileName, aLen) == 0)
-			theFileName += aLen;  // 若是，则跳过从盘符到当前目录的部分，转化为相对路径
-	}
+        // 判断 theFileName 文件是否位于当前目录下
+        if (strncasecmp(aDir, theFileName, aLen) == 0)
+            theFileName += aLen; // 若是，则跳过从盘符到当前目录的部分，转化为相对路径
+    }
 
-	bool lastSlash = false;
-	const char* aSrc = theFileName;
-	char* aDest = theUpperName;
-
-	for (;;)
-	{
-		char c = *(aSrc++);
-
-		if ((c == '\\') || (c == '/'))
-		{
-			// 统一转为右斜杠，且多个斜杠的情况下只保留一个
-			if (!lastSlash)
-				*(aDest++) = '/';
-			lastSlash = true;
-		}
-		else if ((c == '.') && (lastSlash) && (*aSrc == '.'))
-		{
-			// We have a '/..' on our hands
-			aDest--;
-			while ((aDest > theUpperName + 1) && (*(aDest-1) != '\\'))  // 回退到上一层目录
-				--aDest;
-			aSrc++;
-			// 此处将形如“a\b\..\c”的路径简化为“a\c”
-		}
-		else
-		{
-			*(aDest++) = toupper((uchar) c);
-			if (c == 0)
-				break;
-			lastSlash = false;				
-		}
-	}
+    bool lastSlash = false;
+    const char* aSrc = theFileName;
+    char* aDest = theUpperName;
+    for (;;)
+    {
+        char c = *(aSrc++);
+        if ((c == '\\') || (c == '/'))
+        {
+            // 统一转为右斜杠，且多个斜杠的情况下只保留一个
+            if (!lastSlash)
+                *(aDest++) = '/';
+            lastSlash = true;
+        }
+        else if ((c == '.') && (lastSlash) && (*aSrc == '.'))
+        {
+            // We have a '/..' on our hands
+            aDest--;
+            while ((aDest > theUpperName + 1) && (*(aDest-1) != '/')) // 回退到上一层目录
+                --aDest;
+            aSrc++; // 跳过下一个 '.'
+            // 此处将形如“a/b/../c”的路径简化为“a/c”
+        }
+        else
+        {
+            *(aDest++) = toupper((uchar) c);
+            if (c == 0)
+                break;
+            lastSlash = false;
+        }
+    }
 }
 
 bool PakInterface::AddPakFile(const std::string& theFileName)
@@ -144,6 +140,8 @@ bool PakInterface::AddPakFile(const std::string& theFileName)
 	aPakRecord->mFileName = theFileName;
 	aPakRecord->mStartPos = 0;
 	aPakRecord->mSize = aFileSize;
+	aPakRecord->mCompressedSize = aFileSize;
+    aPakRecord->mFlags = 0;
 	
 	PFILE* aFP = FOpen(theFileName.c_str(), "rb");
 	if (aFP == NULL)
@@ -181,6 +179,8 @@ bool PakInterface::AddPakFile(const std::string& theFileName)
 		aName[aNameWidth] = 0;
 		int aSrcSize = 0;
 		FRead(&aSrcSize, sizeof(int), 1, aFP);
+		int aStoredSize = 0;
+		FRead(&aStoredSize, sizeof(int), 1, aFP);
 		int64_t aFileTime;
 		FRead(&aFileTime, sizeof(int64_t), 1, aFP);
 
@@ -200,8 +200,10 @@ bool PakInterface::AddPakFile(const std::string& theFileName)
 		aPakRecord->mStartPos = aPos;
 		aPakRecord->mSize = aSrcSize;
 		aPakRecord->mFileTime = aFileTime;
+        aPakRecord->mCompressedSize = aStoredSize;
+        aPakRecord->mFlags = aFlags;
 
-		aPos += aSrcSize;
+		aPos += aStoredSize;
 	}
 
 	int anOffset = FTell(aFP);
@@ -224,265 +226,265 @@ bool PakInterface::AddPakFile(const std::string& theFileName)
 //0x5D85C0
 PFILE* PakInterface::FOpen(const char* theFileName, const char* anAccess)
 {
-	if ((strcasecmp(anAccess, "r") == 0) || (strcasecmp(anAccess, "rb") == 0) || (strcasecmp(anAccess, "rt") == 0))
-	{
-		char anUpperName[256];
-		FixFileName(theFileName, anUpperName);
-		
-		PakRecordMap::iterator anItr = mPakRecordMap.find(anUpperName);
-		if (anItr != mPakRecordMap.end())
-		{
-			PFILE* aPFP = new PFILE;
-			aPFP->mRecord = &anItr->second;
-			aPFP->mPos = 0;
-			aPFP->mFP = NULL;
-			return aPFP;
-		}
+    if ((strcasecmp(anAccess, "r") == 0) || (strcasecmp(anAccess, "rb") == 0) || (strcasecmp(anAccess, "rt") == 0))
+    {
+        char anUpperName[256];
+        FixFileName(theFileName, anUpperName);
 
-		anItr = mPakRecordMap.find(theFileName);
-		if (anItr != mPakRecordMap.end())
-		{
-			PFILE* aPFP = new PFILE;
-			aPFP->mRecord = &anItr->second;
-			aPFP->mPos = 0;
-			aPFP->mFP = NULL;
-			return aPFP;
-		}
-	}
+        PakRecordMap::iterator anItr = mPakRecordMap.find(anUpperName);
+        if (anItr != mPakRecordMap.end())
+        {
+            PFILE* aPFP = new PFILE;
+            aPFP->mRecord = &anItr->second;
+            aPFP->mPos = 0;
+            aPFP->mFP = NULL;
+            aPFP->mDecompressedCache = nullptr; // 初始化缓存指针
+            return aPFP;
+        }
 
-	FILE* aFP = fcaseopen(theFileName, anAccess);
-	if (aFP == NULL)
-		return NULL;
-	PFILE* aPFP = new PFILE;
-	aPFP->mRecord = NULL;
-	aPFP->mPos = 0;
-	aPFP->mFP = aFP;
-	return aPFP;
+        // 兼容非大写 key（虽然理论上不需要）
+        anItr = mPakRecordMap.find(theFileName);
+        if (anItr != mPakRecordMap.end())
+        {
+            PFILE* aPFP = new PFILE;
+            aPFP->mRecord = &anItr->second;
+            aPFP->mPos = 0;
+            aPFP->mFP = NULL;
+            aPFP->mDecompressedCache = nullptr;
+            return aPFP;
+        }
+    }
+
+    FILE* aFP = fcaseopen(theFileName, anAccess);
+    if (aFP == NULL)
+        return NULL;
+
+    PFILE* aPFP = new PFILE;
+    aPFP->mRecord = NULL;
+    aPFP->mPos = 0;
+    aPFP->mFP = aFP;
+    aPFP->mDecompressedCache = nullptr; // 初始化
+    return aPFP;
 }
 
 //0x5D8780
 int PakInterface::FClose(PFILE* theFile)
 {
-	if (theFile->mRecord == NULL)
-		fclose(theFile->mFP);
-	delete theFile;
-	return 0;
+    if (theFile->mRecord == NULL) {
+        fclose(theFile->mFP);
+    } else {
+        if (theFile->mDecompressedCache) {
+            free(theFile->mDecompressedCache);
+            theFile->mDecompressedCache = nullptr;
+        }
+    }
+    delete theFile;
+    return 0;
 }
 
 //0x5D87B0
 int PakInterface::FSeek(PFILE* theFile, long theOffset, int theOrigin)
 {
-	if (theFile->mRecord != NULL)
-	{
-		if (theOrigin == SEEK_SET)
-			theFile->mPos = theOffset;
-		else if (theOrigin == SEEK_END)
-			theFile->mPos = theFile->mRecord->mSize - theOffset;
-		else if (theOrigin == SEEK_CUR)
-			theFile->mPos += theOffset;
+    if (theFile->mRecord != NULL)
+    {
+        if (theOrigin == SEEK_SET)
+            theFile->mPos = theOffset;
+        else if (theOrigin == SEEK_END)
+            theFile->mPos = theFile->mRecord->mSize - theOffset;
+        else if (theOrigin == SEEK_CUR)
+            theFile->mPos += theOffset;
 
-		// 当前指针位置不能超过整个文件的大小，且不能小于 0
-		theFile->mPos = std::max(std::min(theFile->mPos, theFile->mRecord->mSize), 0);
-		return 0;
-	}
-	else
-		return fseek(theFile->mFP, theOffset, theOrigin);
+        theFile->mPos = std::max(std::min(theFile->mPos, theFile->mRecord->mSize), 0);
+        return 0;
+    }
+    else
+        return fseek(theFile->mFP, theOffset, theOrigin);
 }
 
 //0x5D8830
 int PakInterface::FTell(PFILE* theFile)
 {
-	if (theFile->mRecord != NULL)
-		return theFile->mPos;
-	else
-		return ftell(theFile->mFP);	
+    if (theFile->mRecord != NULL)
+        return theFile->mPos;
+    else
+        return ftell(theFile->mFP);
 }
 
 //0x5D8850
 size_t PakInterface::FRead(void* thePtr, int theElemSize, int theCount, PFILE* theFile)
 {
-	if (theFile->mRecord != NULL)
-	{
-		// 实际读取的字节数不能超过当前资源文件剩余可读取的字节数
-		int aSizeBytes = std::min(theElemSize*theCount, theFile->mRecord->mSize - theFile->mPos);
+    if (!thePtr || theElemSize <= 0 || theCount <= 0 || !theFile)
+        return 0;
 
-		// 取得在整个 pak 中开始读取的位置的指针
-		uchar* src = (uchar*) theFile->mRecord->mCollection->mDataPtr + theFile->mRecord->mStartPos + theFile->mPos;
-		uchar* dest = (uchar*) thePtr;
-		memcpy(dest, src, aSizeBytes);
-		theFile->mPos += aSizeBytes;  // 读取完成后，移动当前读取位置的指针
-		return aSizeBytes / theElemSize;  // 返回实际读取的项数
-	}
-	
-	return fread(thePtr, theElemSize, theCount, theFile->mFP);	
+    if (theFile->mRecord != nullptr)
+    {
+        PakRecord* rec = theFile->mRecord;
+
+        // 安全检查：防止无效大小
+        if (rec->mSize < 0 || rec->mCompressedSize < 0) {
+            return 0;
+        }
+        if (static_cast<size_t>(rec->mSize) > 100 * 1024 * 1024) { // 100MB limit
+            return 0;
+        }
+
+        if (theFile->mPos >= rec->mSize)
+            return 0; // EOF
+
+        if (theFile->mDecompressedCache == nullptr) {
+            size_t allocSize = static_cast<size_t>(rec->mSize);
+            theFile->mDecompressedCache = malloc(allocSize);
+            if (!theFile->mDecompressedCache) {
+                return 0; // 内存不足
+            }
+
+            void* src = static_cast<char*>(rec->mCollection->mDataPtr) + rec->mStartPos;
+
+            if (rec->mFlags & 0x01) {
+                // 压缩
+                size_t result = ZSTD_decompress(
+                    theFile->mDecompressedCache, allocSize,
+                    src, static_cast<size_t>(rec->mCompressedSize)
+                );
+                if (ZSTD_isError(result) || result != allocSize) {
+                    free(theFile->mDecompressedCache);
+                    theFile->mDecompressedCache = nullptr;
+                    return 0;
+                }
+            } else {
+                // 未压缩
+                if (rec->mCompressedSize != rec->mSize) {
+                    free(theFile->mDecompressedCache);
+                    theFile->mDecompressedCache = nullptr;
+                    return 0;
+                }
+                memcpy(theFile->mDecompressedCache, src, allocSize);
+            }
+        }
+
+        size_t remaining = static_cast<size_t>(rec->mSize - theFile->mPos);
+        size_t requestBytes = static_cast<size_t>(theElemSize) * static_cast<size_t>(theCount);
+        size_t toRead = (requestBytes < remaining) ? requestBytes : remaining;
+
+        if (toRead > 0) {
+            if (!theFile->mDecompressedCache) return 0; // 双重保险
+            memcpy(thePtr, static_cast<char*>(theFile->mDecompressedCache) + theFile->mPos, toRead);
+            theFile->mPos += toRead;
+        }
+
+        return toRead / static_cast<size_t>(theElemSize);
+    }
+
+    return fread(thePtr, theElemSize, theCount, theFile->mFP);
 }
 
 int PakInterface::FGetC(PFILE* theFile)
 {
-	if (theFile->mRecord != NULL)
-	{
-		for (;;)
-		{
-			if (theFile->mPos >= theFile->mRecord->mSize)
-				return EOF;		
-			char aChar = *((char*) theFile->mRecord->mCollection->mDataPtr + theFile->mRecord->mStartPos + theFile->mPos++);
-			if (aChar != '\r')
-				return (uchar) aChar;
-		}
-	}
+    if (theFile->mRecord != nullptr) {
+        if (theFile->mDecompressedCache == nullptr) {
+            // 尝试读取 1 字节来触发 FRead 的缓存机制
+            char dummy;
+            if (FRead(&dummy, 1, 1, theFile) == 0) {
+                return EOF; // 解压失败或文件为空
+            }
+            theFile->mPos = 0;
+        }
 
-	return fgetc(theFile->mFP);
+        if (theFile->mPos >= theFile->mRecord->mSize) {
+            return EOF;
+        }
+
+        unsigned char c = static_cast<unsigned char*>(
+            theFile->mDecompressedCache)[theFile->mPos++];
+
+        if (c == '\r') {
+            if (theFile->mPos >= theFile->mRecord->mSize) {
+                return EOF;
+            }
+            c = static_cast<unsigned char*>(
+                theFile->mDecompressedCache)[theFile->mPos++];
+        }
+        return static_cast<int>(c);
+    }
+    return fgetc(theFile->mFP);
 }
 
 int PakInterface::UnGetC(int theChar, PFILE* theFile)
 {
-	if (theFile->mRecord != NULL)
-	{
-		// This won't work if we're not pushing the same chars back in the stream
-		theFile->mPos = std::max(theFile->mPos - 1, 0);
-		return theChar;
-	}
+    if (theFile->mRecord != nullptr) {
+        if (theFile->mDecompressedCache == nullptr) {
+            char dummy;
+            if (FRead(&dummy, 1, 1, theFile) == 0) {
+                return EOF;
+            }
+            theFile->mPos = 0;
+        }
 
-	return ungetc(theChar, theFile->mFP);
+        if (theFile->mPos > 0) {
+            --theFile->mPos;
+        }
+        return theChar;
+    }
+    return ungetc(theChar, theFile->mFP);
 }
 
 char* PakInterface::FGetS(char* thePtr, int theSize, PFILE* theFile)
 {
-	if (theFile->mRecord != NULL)
-	{
-		int anIdx = 0;
-		while (anIdx < theSize)
-		{
-			if (theFile->mPos >= theFile->mRecord->mSize)
-			{
-				if (anIdx == 0)
-					return NULL;
-				break;
-			}
-			char aChar = *((char*) theFile->mRecord->mCollection->mDataPtr + theFile->mRecord->mStartPos + theFile->mPos++);
-			if (aChar != '\r')
-				thePtr[anIdx++] = aChar;
-			if (aChar == '\n')
-				break;
-		}
-		thePtr[anIdx] = 0;
-		return thePtr;
-	}
+    if (theFile->mRecord != nullptr) {
+        if (theFile->mDecompressedCache == nullptr) {
+            char dummy;
+            if (FRead(&dummy, 1, 1, theFile) == 0) {
+                return nullptr; // 无法加载内容
+            }
+            theFile->mPos = 0;
+        }
 
-	return fgets(thePtr, theSize, theFile->mFP);
+        if (theFile->mPos >= theFile->mRecord->mSize) {
+            return nullptr; // EOF
+        }
+
+        int idx = 0;
+        while (idx < theSize - 1) { // 留一个位置给 '\0'
+            if (theFile->mPos >= theFile->mRecord->mSize) {
+                break;
+            }
+
+            unsigned char c = static_cast<unsigned char*>(
+                theFile->mDecompressedCache)[theFile->mPos++];
+
+            if (c == '\r') {
+                if (theFile->mPos < theFile->mRecord->mSize) {
+                    unsigned char next = static_cast<unsigned char*>(
+                        theFile->mDecompressedCache)[theFile->mPos];
+                    if (next == '\n') {
+                        c = '\n';
+                        ++theFile->mPos;
+                    } else {
+                        continue;
+                    }
+                } else {
+                    // \r at end, treat as newline?
+                    c = '\n';
+                }
+            }
+
+            thePtr[idx++] = static_cast<char>(c);
+
+            if (c == '\n') {
+                break;
+            }
+        }
+
+        thePtr[idx] = '\0';
+        return thePtr;
+    }
+    return fgets(thePtr, theSize, theFile->mFP);
 }
 
 int PakInterface::FEof(PFILE* theFile)
 {
-	if (theFile->mRecord != NULL)
-		return theFile->mPos >= theFile->mRecord->mSize;
-	else
-		return feof(theFile->mFP);
+    if (theFile->mRecord != NULL)
+        return theFile->mPos >= theFile->mRecord->mSize;
+    else
+        return feof(theFile->mFP);
 }
-
-/*
-bool PakInterface::PFindNext(PFindData* theFindData, LPWIN32_FIND_DATA lpFindFileData)
-{
-	PakRecordMap::iterator anItr;
-	if (theFindData->mLastFind.size() == 0)
-		anItr = mPakRecordMap.begin();
-	else
-	{
-		anItr = mPakRecordMap.find(theFindData->mLastFind);
-		if (anItr != mPakRecordMap.end())
-			anItr++;
-	}
-
-	while (anItr != mPakRecordMap.end())
-	{
-		const char* aFileName = anItr->first.c_str();
-		PakRecord* aPakRecord = &anItr->second;
-
-		int aStarPos = (int) theFindData->mFindCriteria.find('*');
-		if (aStarPos != -1)
-		{
-			if (strncmp(theFindData->mFindCriteria.c_str(), aFileName, aStarPos) == 0)
-			{				
-				// First part matches
-				const char* anEndData = theFindData->mFindCriteria.c_str() + aStarPos + 1;
-				if ((*anEndData == 0) || (strcmp(anEndData, ".*") == 0) ||								
-					(strcmp(theFindData->mFindCriteria.c_str() + aStarPos + 1, 
-					aFileName + strlen(aFileName) - (theFindData->mFindCriteria.length() - aStarPos) + 1) == 0))
-				{
-					// Matches before and after star
-					memset(lpFindFileData, 0, sizeof(WIN32_FIND_DATAA));
-					
-					int aLastSlashPos = (int) anItr->second.mFileName.rfind('/');
-					if (aLastSlashPos == -1)
-						strcpy(lpFindFileData->cFileName, anItr->second.mFileName.c_str());
-					else
-						strcpy(lpFindFileData->cFileName, anItr->second.mFileName.c_str() + aLastSlashPos + 1);
-
-					const char* aEndStr = aFileName + strlen(aFileName) - (theFindData->mFindCriteria.length() - aStarPos) + 1;
-					if (strchr(aEndStr, '/') != NULL)
-						lpFindFileData->dwFileAttributes |= FILE_ATTRIBUTE_DIRECTORY;
-
-					lpFindFileData->nFileSizeLow = aPakRecord->mSize;
-					lpFindFileData->ftCreationTime = aPakRecord->mFileTime;
-					lpFindFileData->ftLastWriteTime = aPakRecord->mFileTime;
-					lpFindFileData->ftLastAccessTime = aPakRecord->mFileTime;
-					theFindData->mLastFind = aFileName;
-
-					return true;
-				}
-			}
-		}
-
-		++anItr;
-	}
-
-	return false;
-}
-
-HANDLE PakInterface::FindFirstFile(LPCTSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData)
-{
-	PFindData* aFindData = new PFindData;
-
-	char anUpperName[256];
-	FixFileName(lpFileName, anUpperName);
-	aFindData->mFindCriteria = anUpperName;
-	aFindData->mWHandle = INVALID_HANDLE_VALUE;
-
-	if (PFindNext(aFindData, lpFindFileData))
-		return (HANDLE) aFindData;
-
-	aFindData->mWHandle = ::FindFirstFile(aFindData->mFindCriteria.c_str(), lpFindFileData);
-	if (aFindData->mWHandle != INVALID_HANDLE_VALUE)
-		return (HANDLE) aFindData;
-
-	delete aFindData;
-	return INVALID_HANDLE_VALUE;
-}
-
-BOOL PakInterface::FindNextFile(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData)
-{
-	PFindData* aFindData = (PFindData*) hFindFile;
-
-	if (aFindData->mWHandle == INVALID_HANDLE_VALUE)
-	{
-		if (PFindNext(aFindData, lpFindFileData))
-			return TRUE;
-
-		aFindData->mWHandle = ::FindFirstFile(aFindData->mFindCriteria.c_str(), lpFindFileData);
-		return (aFindData->mWHandle != INVALID_HANDLE_VALUE);			
-	}
-	
-	return ::FindNextFile(aFindData->mWHandle, lpFindFileData);
-}
-
-BOOL PakInterface::FindClose(HANDLE hFindFile)
-{
-	PFindData* aFindData = (PFindData*) hFindFile;
-
-	if (aFindData->mWHandle != INVALID_HANDLE_VALUE)
-		::FindClose(aFindData->mWHandle);
-
-	delete aFindData;
-	return TRUE;
-}
-*/

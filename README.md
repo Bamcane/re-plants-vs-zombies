@@ -1,5 +1,15 @@
 # re-plants-vs-zombies fork
 
+从headshot2017的PVZ decomp分支而来，添加了以下内容:
+- [x] 支持Unicode宽字符
+- [x] 允许加载webp图像
+- [x] 允许加载opus音频
+- [x] 使用zstd压缩pak文件里的内容
+  
+原README.md:
+
+# re-plants-vs-zombies fork
+
 Fork of Patoke's PVZ GOTY decompilation with the following objectives:
 - [x] Replace renderer with SDL + OpenGL
 - [x] Replace Windows code with cross-platform code
@@ -9,20 +19,20 @@ Fork of Patoke's PVZ GOTY decompilation with the following objectives:
 - [x] Optimize memory usage for console ports (Partial)
 * Port the game to these platforms:
 
-| Platform        | Data path                    | Status                                                                                 |
-|-----------------|------------------------------|----------------------------------------------------------------------------------------|
-| Windows (SDL2)  | Same as executable           | Works                                                                                  |
-| Linux (SDL2)    | Same as executable           | Works                                                                                  |
-| Haiku (SDL2)    | Same as executable           | Partially works: no music                                                              |
-| Nintendo Switch | sdmc:/switch/PlantsvsZombies | Works on real hardware and Citron. Kenji-NX crashes on boot.                           |
-| Nintendo 3DS    | sdmc:/3ds/PlantsvsZombies    | In development, might not have enough memory for Old 3DS, might barely work on New 3DS |
-| Nintendo Wii U  |                              | No work started yet, but planned                                                       |
+| Platform        | Data path                    | Status                                                                                                                                     |
+|-----------------|------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Windows (SDL2)  | Same as executable           | Works                                                                                                                                      |
+| Linux (SDL2)    | Same as executable           | Works. Small issue on first start-up where the game is stretched fullscreen, making it difficult to click the buttons                      |
+| Haiku (SDL2)    | Same as executable           | Partially works: no music                                                                                                                  |
+| Nintendo Switch | sdmc:/switch/PlantsvsZombies | Works on real hardware and Citron. Kenji-NX crashes on boot.                                                                               |
+| Nintendo 3DS    | sdmc:/3ds/PlantsvsZombies    | In development, might not have enough memory for Old 3DS, might barely work on New 3DS                                                     |
+| Nintendo Wii U  |                              | No work started yet, but planned                                                                                                           |
 
 To play the game, you need the game data from PvZ GOTY. Copy "main.pak" and the "properties" folder to the path where the re-plants-vs-zombies executable is (or one of the above data paths for console ports).
 
 Alternatively, you could use a PvZ .pak extractor tool and use extracted data instead of main.pak, but that's up to you
 
-Original README continues below
+Original README continues below:
 
 # re-plants-vs-zombies
 

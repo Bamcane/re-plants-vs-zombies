@@ -17,11 +17,13 @@ class PakCollection;
 class PakRecord
 {
 public:
+	uint8_t					mFlags;
 	PakCollection*			mCollection;			//+0x0：指向该资源文件所在的资源包的 PakCollection
 	std::string				mFileName;				//+0x4：资源文件的名称及路径（路径从 .pak 开始），例如 sounds\zombie_falling_1.ogg
-	int64_t				mFileTime;				//+0x20：八字节型的资源文件的时间戳
+	int64_t					mFileTime;				//+0x20：八字节型的资源文件的时间戳
 	int						mStartPos;				//+0x28：该资源文件在资源包中的位置（即在 mCollection->mDataPtr 中的偏移量）
 	int						mSize;					//+0x2C：资源文件的大小，单位为 Byte（字节数）
+	int						mCompressedSize;		//+0x30：该资源文件在 .pak 中的实际压缩后大小（若等于 mSize 则未压缩）
 };
 
 typedef std::map<std::string, PakRecord> PakRecordMap;
@@ -48,6 +50,7 @@ struct PFILE
 	PakRecord*				mRecord;
 	int						mPos;
 	FILE*					mFP;
+	void* 					mDecompressedCache;
 };
 
 struct PFindData
