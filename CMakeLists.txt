@@ -162,12 +162,11 @@ if (WIN32)
 #	)
 else()
 	target_link_libraries(re-plants-vs-zombies GL)
+	### tools
+	add_executable(pak_pack tools/pak_pack.cpp ${DEP_ZSTD})
+	add_executable(pak_unpack tools/pak_unpack.cpp ${DEP_ZSTD})
+
+	target_link_libraries(pak_pack ${ZSTD_LIBRARIES})
+	target_link_libraries(pak_unpack ${ZSTD_LIBRARIES})
 endif()
 
-
-### tools
-add_executable(pak_pack tools/pak_pack.cpp ${DEP_ZSTD})
-add_executable(pak_unpack tools/pak_unpack.cpp ${DEP_ZSTD})
-
-target_link_libraries(pak_pack ${ZSTD_LIBRARIES})
-target_link_libraries(pak_unpack ${ZSTD_LIBRARIES})
