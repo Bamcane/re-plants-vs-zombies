@@ -37,8 +37,8 @@ jobs:
         run: |
           cmake -G Ninja -B build
           cmake --build build
-          cp /mingw32/bin/SDL2.dll /mingw32/bin/glew32.dll /mingw32/bin/libopusfile.dll /mingw32/bin/libopus.dll /mingw32/bin/libogg.dll build/
-          cp ./main.pak.zst build/
+          cp /mingw32/bin/SDL2.dll /mingw32/bin/glew32.dll /mingw32/bin/libopusfile-0.dll /mingw32/bin/libopus-0.dll /mingw32/bin/libogg-0.dll build/
+          cp ./main.pak build/
 
       - name: Upload .exe artifact
         uses: actions/upload-artifact@v4
