@@ -413,7 +413,7 @@ FodyWeavers.xsd
 
 gdb_run
 gdb_run-start
-main.pak
+!main.pak
 main.unpak
 tools/res/
 tools/res-bak/
