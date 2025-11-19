@@ -644,6 +644,19 @@ bool IsFileInPakFile(const SexyString& theFilePath)
     return aIsInPak;
 }
 
+time_t GetFileTimeInPakFile(const SexyString& theFilePath)
+{
+    PFILE* pFile = p_fopen(SexyStringToStringFast(theFilePath).c_str(), "rb");
+    bool aIsInPak = pFile && !pFile->mFP;  // 通过 mPakRecordMap.find 找到并打开的文件，其 mFP 为空指针（因为不是从实际文件中打开的）
+    if (pFile)
+    {
+        time_t Time = static_cast<time_t>(pFile->mRecord->mFileTime);
+        p_fclose(pFile);
+        return Time;
+    }
+    return time(0); // 这是个异常
+}
+
 bool DefinitionIsCompiled(const SexyString& theXMLFilePath)
 {
     SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
@@ -656,6 +669,11 @@ bool DefinitionIsCompiled(const SexyString& theXMLFilePath)
         return false;
     time_t aCompiledFileTime = attr.st_mtime;
 
+    if (IsFileInPakFile(theXMLFilePath))
+    {
+        return GetFileTimeInPakFile(theXMLFilePath) <= aCompiledFileTime;
+    }
+    
     if (stat(SexyStringToStringFast(theXMLFilePath).c_str(), &attr) != 0)
     {
         TodTrace("Can't file source file to compile '%s'", SexyStringToStringFast(theXMLFilePath).c_str());
@@ -1322,8 +1340,9 @@ bool DefinitionCompileFile(const SexyString theXMLFilePath, const SexyString& th
 //0x4447F0 : (void* def, *defMap, string& xmlFilePath)  //esp -= 0xC
 bool DefinitionCompileAndLoad(const SexyString& theXMLFilePath, DefMap* theDefMap, void* theDefinition)
 {
+/*
 #ifdef _DEBUG  // 内测版执行的内容
-
+*/
     TodHesitationTrace("predef");
     SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
     if (DefinitionIsCompiled(theXMLFilePath) && DefinitionReadCompiledFile(aCompiledFilePath, theDefMap, theDefinition))
@@ -1340,7 +1359,7 @@ bool DefinitionCompileAndLoad(const SexyString& theXMLFilePath, DefMap* theDefMa
         TodHesitationTrace("compiled %s", aCompiledFilePath.c_str());
         return aResult;
     }
-
+/*
 #else  // 原版执行的内容
 
     SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
@@ -1351,6 +1370,7 @@ bool DefinitionCompileAndLoad(const SexyString& theXMLFilePath, DefMap* theDefMa
     exit(0);
     
 #endif
+*/
 }
 
 //0x4448E0
