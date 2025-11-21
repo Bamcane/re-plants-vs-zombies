@@ -600,9 +600,8 @@ void AwardScreen::DrawAchievements(Graphics* g) {
 	TodDrawString(g, __S("ACHIEVEMENTS"), BOARD_WIDTH / 2, 58, FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
 
 	for (size_t i = 0; i < mAchievementItems.size(); i++) {
-		SexyString aAchievementName = gAchievementList[mAchievementItems[i].mId].name;
+		SexyString aAchievementName = StrFormat(mApp->GetString("%s Earned!", __S("%s Earned!")).c_str(), mApp->GetString(SexyStringToStringFast(gAchievementList[mAchievementItems[i].mId].name), gAchievementList[mAchievementItems[i].mId].name).c_str());
 		SexyString aAchievementDesc = gAchievementList[mAchievementItems[i].mId].description;
-		aAchievementName.append(__S(" Earned!"));
 
 		Rect aSrcRect = Rect(70 * (mAchievementItems[i].mId % 7), 70 * (mAchievementItems[i].mId / 7), 70, 70);
 		Rect aDestRect = Rect(70, 70, 70, 70);

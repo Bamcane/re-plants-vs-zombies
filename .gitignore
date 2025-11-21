@@ -423,6 +423,8 @@ tools/read-compiled/target
 
 build-*/
 
+/registry.regemu
+
 /compiled
 /savedata
 /pak_pack

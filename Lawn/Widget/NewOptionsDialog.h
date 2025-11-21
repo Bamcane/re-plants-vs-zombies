@@ -34,7 +34,7 @@ public:
 	Sexy::Slider*			mMusicVolumeSlider;					//+0x15C
 	Sexy::Slider*			mSfxVolumeSlider;					//+0x160
 	Sexy::Checkbox*			mFullscreenCheckbox;				//+0x164
-	Sexy::Checkbox*			mHardwareAccelerationCheckbox;		//+0x168
+	// Sexy::Checkbox*			mHardwareAccelerationCheckbox;		//+0x168
 	LawnStoneButton*		mAlmanacButton;						//+0x16C
 	LawnStoneButton*		mBackToMainButton;					//+0x170
 	LawnStoneButton*		mRestartButton;						//+0x174

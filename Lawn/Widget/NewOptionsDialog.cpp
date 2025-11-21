@@ -53,9 +53,9 @@ NewOptionsDialog::NewOptionsDialog(LawnApp* theApp, bool theFromGameSelector) :
 
     mSfxVolumeSlider = new Slider(IMAGE_OPTIONS_SLIDERSLOT, IMAGE_OPTIONS_SLIDERKNOB2, NewOptionsDialog::NewOptionsDialog_SoundVolume, this);
     mSfxVolumeSlider->SetValue(theApp->GetSfxVolume() / 0.65);
-
+ 
     mFullscreenCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_Fullscreen, this, !theApp->mIsWindowed);
-    mHardwareAccelerationCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_HardwareAcceleration, this, theApp->Is3DAccelerated());
+    // mHardwareAccelerationCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_HardwareAcceleration, this, theApp->Is3DAccelerated());
 
     if (mFromGameSelector)
     {
@@ -97,7 +97,7 @@ NewOptionsDialog::~NewOptionsDialog()
     delete mMusicVolumeSlider;
     delete mSfxVolumeSlider;
     delete mFullscreenCheckbox;
-    delete mHardwareAccelerationCheckbox;
+    // delete mHardwareAccelerationCheckbox;
     delete mAlmanacButton;
     delete mRestartButton;
     delete mBackToMainButton;
@@ -120,7 +120,7 @@ void NewOptionsDialog::AddedToManager(Sexy::WidgetManager* theWidgetManager)
     AddWidget(mBackToMainButton);
     AddWidget(mMusicVolumeSlider);
     AddWidget(mSfxVolumeSlider);
-    AddWidget(mHardwareAccelerationCheckbox);
+    // AddWidget(mHardwareAccelerationCheckbox);
     AddWidget(mFullscreenCheckbox);
     AddWidget(mBackToGameButton);
 }
@@ -133,7 +133,7 @@ void NewOptionsDialog::RemovedFromManager(Sexy::WidgetManager* theWidgetManager)
     RemoveWidget(mMusicVolumeSlider);
     RemoveWidget(mSfxVolumeSlider);
     RemoveWidget(mFullscreenCheckbox);
-    RemoveWidget(mHardwareAccelerationCheckbox);
+    // RemoveWidget(mHardwareAccelerationCheckbox);
     RemoveWidget(mBackToMainButton);
     RemoveWidget(mBackToGameButton);
     RemoveWidget(mRestartButton);
@@ -145,8 +145,8 @@ void NewOptionsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
     Dialog::Resize(theX, theY, theWidth, theHeight);
     mMusicVolumeSlider->Resize(199, 116, 135, 40);
     mSfxVolumeSlider->Resize(199, 143, 135, 40);
-    mHardwareAccelerationCheckbox->Resize(283, 175, 46, 45);
-    mFullscreenCheckbox->Resize(284, 206, 46, 45);
+   //  mHardwareAccelerationCheckbox->Resize(283, 175, 46, 45);
+    mFullscreenCheckbox->Resize(283, 175, 46, 45);
     mAlmanacButton->Resize(107, 241, 209, 46);
     mRestartButton->Resize(mAlmanacButton->mX, mAlmanacButton->mY + 43, 209, 46);
     mBackToMainButton->Resize(mRestartButton->mX, mRestartButton->mY + 43, 209, 46);
@@ -156,8 +156,8 @@ void NewOptionsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
     {
         mMusicVolumeSlider->mY += 5;
         mSfxVolumeSlider->mY += 10;
-        mHardwareAccelerationCheckbox->mY += 15;
-        mFullscreenCheckbox->mY += 20;
+        // mHardwareAccelerationCheckbox->mY += 15;
+        mFullscreenCheckbox->mY += 15;
     }
 
     if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
@@ -173,21 +173,19 @@ void NewOptionsDialog::Draw(Sexy::Graphics* g)
 
     int aMusicOffset = 0;
     int aSfxOffset = 0;
-    int a3DAccelOffset = 0;
     int aFullScreenOffset = 0;
     if (mFromGameSelector)
     {
         aMusicOffset = 5;
         aSfxOffset = 10;
-        a3DAccelOffset = 15;
-        aFullScreenOffset = 20;
+        aFullScreenOffset = 15;
     }
     Sexy::Color aTextColor(107, 109, 145);
 
-    TodDrawString(g, __S("Music"), 186, 140 + aMusicOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
-    TodDrawString(g, __S("Sound FX"), 186, 167 + aSfxOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
-    TodDrawString(g, __S("3D Acceleration"), 274, 197 + a3DAccelOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
-    TodDrawString(g, __S("Full Screen"), 274, 229 + aFullScreenOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+    TodDrawString(g, mApp->GetString("Music", __S("Music")), 186, 140 + aMusicOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+    TodDrawString(g, mApp->GetString("Sound FX", __S("Sound FX")), 186, 167 + aSfxOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+    // TodDrawString(g, __S("3D Acceleration"), 274, 197 + a3DAccelOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+    TodDrawString(g, mApp->GetString("Full Screen", __S("Full Screen")), 274, 197 + aFullScreenOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
 }
 
 //0x45CF50
@@ -233,7 +231,7 @@ void NewOptionsDialog::CheckboxChecked(int theId, bool checked)
             mFullscreenCheckbox->SetChecked(true, false);
         }
         break;
-
+    /*
     case NewOptionsDialog::NewOptionsDialog_HardwareAcceleration:
         if (checked)
         {
@@ -266,6 +264,7 @@ void NewOptionsDialog::CheckboxChecked(int theId, bool checked)
             }
         }
         break;
+    */
     }
 }
 

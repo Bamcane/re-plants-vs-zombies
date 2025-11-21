@@ -1134,8 +1134,8 @@ bool LawnApp::KillNewOptionsDialog()
 		return false;
 
 	bool wantWindowed = !aNewOptionsDialog->mFullscreenCheckbox->IsChecked();
-	bool want3D = aNewOptionsDialog->mHardwareAccelerationCheckbox->IsChecked();
-	SwitchScreenMode(wantWindowed, want3D, false);
+	// bool want3D = aNewOptionsDialog->mHardwareAccelerationCheckbox->IsChecked();
+	SwitchScreenMode(wantWindowed, true, false);
 
 	KillDialog(Dialogs::DIALOG_NEWOPTIONS);
 	ClearUpdateBacklog();

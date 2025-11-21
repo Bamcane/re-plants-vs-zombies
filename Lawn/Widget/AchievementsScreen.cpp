@@ -29,7 +29,7 @@ AchievementItem gAchievementList[MAX_ACHIEVEMENTS] = {
 	{ __S("Explodonator"), __S("Take out 10 full-sized zombies with a single Cherry Bomb.") },
 	{ __S("Morticulturalist"), __S("Collect all 49 plants (including plants from Crazy Dave's shop).") },
 	{ __S("Don't Pea in the Pool"), __S("Complete a daytime pool level without using pea shooters of any kind.") },
-	{ __S("Roll Some Heads"), __S("Bowl over 5 zombies with the same wall-nut.") },
+	{ __S("Roll Some Heads"), __S("Bowl over 5 zombies with a single Wall-Nut.") },
 	{ __S("Grounded"), __S("Defeat a normal roof level without using any catapult plants.") },
 	{ __S("Zombologist"), __S("Discover the Yeti zombie.") },
 	{ __S("Penny Pincher"), __S("Pick up 30 coins in a row on a single level without letting any disappear.") },
@@ -136,7 +136,7 @@ void AchievementsWidget::Draw(Graphics* g) {
 		g->SetFont(FONT_DWARVENTODCRAFT15);
 		g->SetColor(Color(21, 175, 0));
 
-		g->DrawString(gAchievementList[i].name, aTextXPos, aTextYPos);
+		g->DrawString(mApp->GetString(SexyStringToStringFast(gAchievementList[i].name), gAchievementList[i].name), aTextXPos, aTextYPos);
 
 		// Achievement descriptions	
 		Rect aPos = Rect(aTextXPos, aTextYPos + 3, 212, 60);
@@ -144,7 +144,7 @@ void AchievementsWidget::Draw(Graphics* g) {
 		g->SetFont(FONT_DWARVENTODCRAFT12);
 		g->SetColor(Color(255, 255, 255));
 
-		g->WriteWordWrapped(aPos, gAchievementList[i].description, 12);
+		g->WriteWordWrapped(aPos, mApp->GetString(SexyStringToStringFast(gAchievementList[i].description), gAchievementList[i].description), 12);
 	}
 
 	g->DrawImage(IMAGE_ACHEESEMENTS_MORE_ROCK, 700, 450);
@@ -220,8 +220,7 @@ void ReportAchievement::GiveAchievement(LawnApp* theApp, int theAchievement, boo
 	if (!theForceGive)
 		return;
 
-	SexyString aAchievementName = gAchievementList[theAchievement].name;
-	aAchievementName.append(__S(" Achievement!"));
+	SexyString aAchievementName = StrFormat(theApp->GetString("%s Achievement!", __S("%s Achievement!")).c_str(), theApp->GetString(SexyStringToStringFast(gAchievementList[theAchievement].name), gAchievementList[theAchievement].name).c_str());
 
 	theApp->mBoard->DisplayAdvice(aAchievementName, MESSAGE_STYLE_ACHIEVEMENT, AdviceType::ADVICE_NONE);
 	theApp->PlaySample(SOUND_ACHIEVEMENT);

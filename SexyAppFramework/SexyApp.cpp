@@ -590,8 +590,8 @@ void SexyApp::InitPropertiesHook()
 	//mInternetManager->Init();
 	mBetaSupport = nullptr;//new BetaSupport(this);
 
-#ifdef ZYLOM
 	LoadProperties();
+#ifdef ZYLOM
 	ZylomGS_StandAlone_Init(mZylomGameId, (char*) GetString("BUG_REPORT_TITLE").c_str(), (char*) GetString("BUG_REPORT_BODY").c_str());
 #endif
 }

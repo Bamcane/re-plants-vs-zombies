@@ -36,6 +36,10 @@
 <String id="APP_REQUIRES_DIRECTX">这一程序需要DirectX才能运行。您可以在http://www.microsoft.com/directx中获取DirectX</String>
 <String id="YOU_NEED_DIRECTX">你需要DirectX</String>
 
+<String id="Music">音乐</String>
+<String id="Sound FX">音效</String>
+<String id="Full Screen">全屏</String>
+
 <String id="Home Lawn Security">庭院无忧</String>
 <String id="Complete Adventure Mode.">完成冒险模式。</String>
 <String id="Nobel Peas Prize">葵花宝典</String> 

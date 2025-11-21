@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
         compressedSize = ZSTD_compress(
             compressed.data(), maxDstSize,
             srcData.data(), st.st_size,
-            3
+            6
         );
 
         if (!ZSTD_isError(compressedSize) && compressedSize < static_cast<size_t>(st.st_size)) {

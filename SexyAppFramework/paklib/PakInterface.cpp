@@ -157,7 +157,7 @@ bool PakInterface::AddPakFile(const std::string& theFileName)
 
 	uint32_t aVersion = 0;
 	FRead(&aVersion, sizeof(uint32_t), 1, aFP);
-	if (aVersion > 0)
+	if (aVersion != 1)
 	{
 		FClose(aFP);
 		return false;

@@ -4653,13 +4653,13 @@ bool SexyAppBase::LoadProperties(const std::string& theFileName, bool required, 
 	PropertiesParser aPropertiesParser(this);
 
 	// Load required language-file properties
-		if (!aPropertiesParser.ParsePropertiesBuffer(aBuffer))
-		{
-			Popup(aPropertiesParser.GetErrorText());		
-			return false;
-		}
-		else
-			return true;
+	if (!aPropertiesParser.ParsePropertiesBuffer(aBuffer))
+	{
+		Popup(aPropertiesParser.GetErrorText());		
+		return false;
+	}
+	else
+		return true;
 }
 
 bool SexyAppBase::LoadProperties()
@@ -5025,6 +5025,8 @@ void SexyAppBase::Init()
 	}
 	*/
 
+	gPakInterface->AddPakFile("main.pak");
+
 	InitPropertiesHook();
 	ReadFromRegistry();	
 
@@ -5075,8 +5077,6 @@ void SexyAppBase::Init()
 	getcwd(aPath, 512);
 	strcat(aPath, "/savedata/");
 	SetAppDataFolder(aPath);
-
-	gPakInterface->AddPakFile("main.pak");
 
 	// Create a message we can use to talk to ourselves inter-process
 	//mNotifyGameMessage = RegisterWindowMessage((__S("Notify") + StringToSexyString(mProdName)).c_str());

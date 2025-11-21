@@ -18,11 +18,13 @@ bool create_directories(const string& path) {
     size_t pos = 0;
     do {
         pos = path.find('/', pos + 1);
+        if(pos == string::npos)
+            break;
         string subdir = path.substr(0, pos);
         if (!subdir.empty() && mkdir(subdir.c_str(), 0755) != 0) {
             if (errno != EEXIST) return false;
         }
-    } while (pos != string::npos);
+    } while (true);
     return true;
 }
 
@@ -70,7 +72,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    if (version != 0) {
+    if (version != 1) {
         cerr << "Unsupported version: " << version << "\n";
         return 1;
     }
